@@ -7,33 +7,33 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="700.0" style="-fx-background-color: #2e3348;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="700.0" style="-fx-background-color: #2e3348;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
    <children>
       <AnchorPane layoutY="90.0" prefHeight="310.0" prefWidth="700.0" style="-fx-background-color: #fafafa;">
          <children>
-            <TextField layoutX="179.0" layoutY="77.0" prefHeight="26.0" prefWidth="343.0" promptText="Логин" style="-fx-border-radius: 5; -fx-border-color: #cccccc;">
+            <TextField fx:id="loginField" layoutX="179.0" layoutY="77.0" prefHeight="26.0" prefWidth="343.0" promptText="Логин" style="-fx-border-radius: 5; -fx-border-color: #cccccc;">
                <font>
                   <Font size="17.0" />
                </font>
             </TextField>
-            <PasswordField layoutX="179.0" layoutY="139.0" prefHeight="26.0" prefWidth="343.0" promptText="Пароль" style="-fx-border-radius: 5; -fx-border-color: #cccccc;">
+            <PasswordField fx:id="passwordField" layoutX="179.0" layoutY="139.0" prefHeight="26.0" prefWidth="343.0" promptText="Пароль" style="-fx-border-radius: 5; -fx-border-color: #cccccc;">
                <font>
                   <Font size="17.0" />
                </font>
             </PasswordField>
-            <Label layoutX="241.0" layoutY="37.0" text="Авторизация" textFill="#686464">
+            <Label layoutX="261.0" layoutY="33.0" text="Авторизация" textFill="#686464">
                <font>
-                  <Font name="Ivan" size="24.0" />
+                  <Font name="ALSMalina" size="24.0" />
                </font>
             </Label>
-            <Button layoutX="303.0" layoutY="195.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="94.0" style="-fx-background-color: #936954; -fx-focus-traversable: #f5572f; -fx-cursor: hand;" text="Войти" textFill="#eee8e5" />
+            <Button fx:id="authSignInButton" layoutX="303.0" layoutY="195.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="94.0" style="-fx-background-color: #2e3348; -fx-cursor: hand;" text="Войти" textFill="#e6e6ed" />
          </children>
       </AnchorPane>
-      <Label layoutX="14.0" text="gardaria" textFill="#fafafa">
+      <Label layoutX="38.0" layoutY="-1.0" text="FunParse" textFill="#fafafa">
          <font>
-            <Font name="Ivan" size="73.0" />
+            <Font name="ALSMalina" size="73.0" />
          </font>
       </Label>
-      <Button layoutX="513.0" layoutY="34.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="173.0" style="-fx-background-color: #a5572f; -fx-focus-traversable: #f5572f; -fx-cursor: hand;" text="Зарегистрироваться" textFill="#dbdce1" />
+      <Button fx:id="loginSigninButton" layoutX="513.0" layoutY="28.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="173.0" style="-fx-background-color: #a5572f; -fx-cursor: hand;" text="Зарегистрироваться" textFill="#dbdce1" />
    </children>
 </AnchorPane>
