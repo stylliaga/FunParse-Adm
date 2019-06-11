@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="700.0" style="-fx-background-color: #2e3348;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.ImageController">
+    <children>
+        <AnchorPane layoutY="90.0" prefHeight="310.0" prefWidth="700.0" style="-fx-background-color: #fafafa;">
+            <children>
+            <TabPane prefHeight="310.0" prefWidth="700.0" side="LEFT" tabClosingPolicy="UNAVAILABLE">
+              <tabs>
+                <Tab text="Просмотр">
+                  <content>
+                    <AnchorPane fx:id="paneViewImage" minHeight="0.0" minWidth="0.0" prefHeight="275.0" prefWidth="697.0">
+                           <children>
+                              <ImageView fx:id="showNextImage" fitHeight="281.0" fitWidth="553.0" layoutX="139.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../assets/parashalkash.png" />
+                                 </image>
+                              </ImageView>
+                              <Button fx:id="previousImageButton" layoutX="8.0" layoutY="278.0" mnemonicParsing="false" onAction="#previousImageButton" text="Назад" />
+                              <Button fx:id="netxImageButton" layoutX="590.0" layoutY="278.0" mnemonicParsing="false" onAction="#netxImageButton" text="Вперед" />
+                              <Button fx:id="downloadFileButton" contentDisplay="GRAPHIC_ONLY" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#downloadFileButton" prefHeight="27.0" prefWidth="0.0">
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                                 <graphic>
+                                    <ImageView fitHeight="21.0" fitWidth="17.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../assets/saveFileIcon.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </Tab>
+                <Tab text="Настройки">
+                  <content>
+                    <AnchorPane fx:id="paneSettings" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <Label layoutX="14.0" layoutY="14.0" text="Сортировать по:" textFill="#4c597c" />
+                              <RadioButton fx:id="sortImagesByDate" layoutX="143.0" layoutY="41.0" mnemonicParsing="false" onAction="#sortImagesByDate" text="Дате" textFill="#4c597c">
+                                 <font>
+                                    <Font size="12.0" />
+                                 </font>
+                              </RadioButton>
+                              <RadioButton fx:id="sortImagesByPopular" layoutX="143.0" layoutY="14.0" mnemonicParsing="false" onAction="#sortImagesByPopular" text="Популярности" textFill="#4c597c">
+                                 <font>
+                                    <Font size="12.0" />
+                                 </font>
+                              </RadioButton>
+                              <CheckBox fx:id="saveImageOnComputer" layoutX="14.0" layoutY="87.0" mnemonicParsing="false" onAction="#saveImageOnComputer" prefHeight="40.0" prefWidth="402.0" text="Автоматически сохранять изображения&#10;на компьютер" textFill="#4c597c" />
+                              <Button fx:id="saveFolder" layoutX="14.0" layoutY="129.0" mnemonicParsing="false" onAction="#saveFolder" prefHeight="26.0" prefWidth="295.0" text="Указать папку сохранения" textFill="#4c597c" />
+                              <Separator layoutY="165.0" prefHeight="2.0" prefWidth="330.0" />
+                              <CheckBox fx:id="searchOnlyAdultImages" layoutX="15.0" layoutY="175.0" mnemonicParsing="false" onAction="#searchOnlyAdultImages" text="Искать только 18+" textFill="#4c597c" />
+                              <Separator layoutX="331.0" layoutY="2.0" orientation="VERTICAL" prefHeight="203.0" prefWidth="0.0" />
+                              <Separator layoutY="75.0" prefHeight="2.0" prefWidth="330.0" />
+                              <Separator layoutY="204.0" prefHeight="2.0" prefWidth="330.0" />
+                              <Label layoutX="343.0" layoutY="14.0" text="Изменить пароль:" textFill="#4c597c" />
+                              <PasswordField fx:id="inputOldPassword" layoutX="343.0" layoutY="36.0" onAction="#inputOldPassword" prefHeight="26.0" prefWidth="314.0" promptText="Введите старый пароль" />
+                              <PasswordField fx:id="inputNewPassword" layoutX="343.0" layoutY="94.0" onAction="#inputNewPassword" prefHeight="26.0" prefWidth="314.0" promptText="Введите новый пароль" />
+                              <PasswordField fx:id="inputNewPassword2" layoutX="343.0" layoutY="129.0" onAction="#inputNewPassword2" prefHeight="26.0" prefWidth="314.0" promptText="Введите новый пароль еще раз" />
+                              <Separator layoutX="335.0" layoutY="165.0" prefHeight="2.0" prefWidth="330.0" />
+                              <Label layoutX="343.0" layoutY="176.0" text="Язык:" textFill="#4c597c" />
+                              <ChoiceBox fx:id="chooseLanguage" layoutX="399.0" layoutY="171.0" prefHeight="26.0" prefWidth="257.0" />
+                              <Separator layoutX="333.0" layoutY="204.0" prefHeight="2.0" prefWidth="330.0" />
+                              <ButtonBar layoutX="521.0" layoutY="252.0" prefHeight="44.0" prefWidth="132.0">
+                                <buttons>
+                                    <Button fx:id="saveSettings" mnemonicParsing="false" onAction="#saveSettings" prefHeight="26.0" prefWidth="124.0" text="Сохранить" />
+                                </buttons>
+                              </ButtonBar>
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </Tab>
+              </tabs>
+            </TabPane>
+            </children>
+        </AnchorPane>
+        <Label layoutX="14.0" text="FunParse" textFill="#fafafa">
+            <font>
+                <Font name="ALSMalina" size="73.0" />
+            </font>
+        </Label>
+      <ChoiceBox fx:id="urlSiteToParse" layoutX="424.0" layoutY="42.0" prefHeight="16.0" prefWidth="251.0" />
+      <Label layoutX="424.0" layoutY="19.0" text="URL откуда парсить:" textFill="#f8f4f4" />
+    </children>
+</AnchorPane>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="700.0" style="-fx-background-color: #2e3348;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.signUpController">
+   <children>
+      <AnchorPane layoutY="90.0" prefHeight="310.0" prefWidth="700.0" style="-fx-background-color: #fafafa;">
+         <children>
+            <TextField fx:id="signUpLogin" layoutX="303.0" layoutY="16.0" onAction="#signUpLogin" prefHeight="26.0" prefWidth="343.0" style="-fx-border-radius: 5; -fx-border-color: #cccccc;">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="signUpEmail" layoutX="303.0" layoutY="70.0" onAction="#signUpEmail" prefHeight="26.0" prefWidth="343.0" style="-fx-border-radius: 5; -fx-border-color: #cccccc;">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="signUpCity" layoutX="303.0" layoutY="127.0" onAction="#signUpCity" prefHeight="26.0" prefWidth="343.0" style="-fx-border-radius: 5; -fx-border-color: #cccccc;">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </TextField>
+            <PasswordField fx:id="signUpPassword" layoutX="305.0" layoutY="183.0" onAction="#signUpPassword" prefHeight="26.0" prefWidth="343.0" promptText="Пароль" style="-fx-border-radius: 5; -fx-border-color: #cccccc;">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </PasswordField>
+            <CheckBox fx:id="signUpCheckBoxMale" layoutX="306.0" layoutY="246.0" mnemonicParsing="false" onAction="#signUpCheckBoxMale" text="Мужской" />
+            <CheckBox fx:id="signUpCheckBoxFemale" layoutX="306.0" layoutY="274.0" mnemonicParsing="false" onAction="#signUpCheckBoxFemale" text="Женский" />
+            <Button fx:id="signUpButton" cache="true" layoutX="477.0" layoutY="250.0" mnemonicParsing="false" onAction="#signUpButton" prefHeight="33.0" prefWidth="170.0" style="-fx-background-color: #2e3348; -fx-cursor: hand;" text="Зарегистрироваться" textFill="#e6e6ed" />
+            <Label layoutX="90.0" layoutY="18.0" text="Логин">
+               <font>
+                  <Font name="ALSMalina" size="24.0" />
+               </font>
+            </Label>
+            <Label layoutX="90.0" layoutY="72.0" text="Email">
+               <font>
+                  <Font name="ALSMalina" size="24.0" />
+               </font>
+            </Label>
+            <Label layoutX="95.0" layoutY="137.0" />
+            <Label layoutX="90.0" layoutY="129.0" text="Ваш город">
+               <font>
+                  <Font name="ALSMalina" size="24.0" />
+               </font>
+            </Label>
+            <Label layoutX="90.0" layoutY="185.0" text="Пароль">
+               <font>
+                  <Font name="ALSMalina" size="24.0" />
+               </font>
+            </Label>
+            <Label layoutX="90.0" layoutY="235.0" text="Ваш пол:">
+               <font>
+                  <Font name="ALSMalina" size="24.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+      <Label layoutX="38.0" layoutY="-1.0" text="FunParse" textFill="#fafafa">
+         <font>
+            <Font name="ALSMalina" size="73.0" />
+         </font>
+      </Label>
+      <Label layoutX="480.0" layoutY="45.0" text="Регистрация" textFill="#f58f3c">
+         <font>
+            <Font name="ALSMalina" size="24.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>
