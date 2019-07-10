@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_javatutorprofxgd" default="compile.module.javatutorprofxgd">
+  <dirname property="module.javatutorprofxgd.basedir" file="${ant.file.module_javatutorprofxgd}"/>
+  
+  <property name="module.jdk.home.javatutorprofxgd" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.javatutorprofxgd" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.javatutorprofxgd" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.javatutorprofxgd" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  
+  <property name="javatutorprofxgd.output.dir" value="${module.javatutorprofxgd.basedir}/out/production/javaTutorProFXGD"/>
+  <property name="javatutorprofxgd.testoutput.dir" value="${module.javatutorprofxgd.basedir}/out/test/javaTutorProFXGD"/>
+  
+  <path id="javatutorprofxgd.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="javatutorprofxgd.module.production.classpath">
+    <path refid="${module.jdk.classpath.javatutorprofxgd}"/>
+    <path refid="library.mysql-connector-java-8.0.16.classpath"/>
+  </path>
+  
+  <path id="javatutorprofxgd.runtime.production.module.classpath">
+    <pathelement location="${javatutorprofxgd.output.dir}"/>
+    <path refid="library.mysql-connector-java-8.0.16.classpath"/>
+  </path>
+  
+  <path id="javatutorprofxgd.module.classpath">
+    <path refid="${module.jdk.classpath.javatutorprofxgd}"/>
+    <pathelement location="${javatutorprofxgd.output.dir}"/>
+    <path refid="library.mysql-connector-java-8.0.16.classpath"/>
+  </path>
+  
+  <path id="javatutorprofxgd.runtime.module.classpath">
+    <pathelement location="${javatutorprofxgd.testoutput.dir}"/>
+    <pathelement location="${javatutorprofxgd.output.dir}"/>
+    <path refid="library.mysql-connector-java-8.0.16.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.javatutorprofxgd">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.javatutorprofxgd">
+    <patternset refid="excluded.from.module.javatutorprofxgd"/>
+  </patternset>
+  
+  <path id="javatutorprofxgd.module.sourcepath">
+    <dirset dir="${module.javatutorprofxgd.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.javatutorprofxgd" depends="compile.module.javatutorprofxgd.production,compile.module.javatutorprofxgd.tests" description="Compile module javaTutorProFXGD"/>
+  
+  <target name="compile.module.javatutorprofxgd.production" depends="register.custom.compilers" description="Compile module javaTutorProFXGD; production classes">
+    <mkdir dir="${javatutorprofxgd.output.dir}"/>
+    <javac2 destdir="${javatutorprofxgd.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.javatutorprofxgd}/javac">
+      <compilerarg line="${compiler.args.javatutorprofxgd}"/>
+      <bootclasspath refid="javatutorprofxgd.module.bootclasspath"/>
+      <classpath refid="javatutorprofxgd.module.production.classpath"/>
+      <src refid="javatutorprofxgd.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.javatutorprofxgd"/>
+    </javac2>
+    
+    <copy todir="${javatutorprofxgd.output.dir}">
+      <fileset dir="${module.javatutorprofxgd.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.javatutorprofxgd.tests" depends="register.custom.compilers,compile.module.javatutorprofxgd.production" description="compile module javaTutorProFXGD; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.javatutorprofxgd" description="cleanup module">
+    <delete dir="${javatutorprofxgd.output.dir}"/>
+    <delete dir="${javatutorprofxgd.testoutput.dir}"/>
+  </target>
+</project>

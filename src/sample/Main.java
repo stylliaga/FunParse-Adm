@@ -5,16 +5,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import sample.medClass;
 
 
 public class Main extends Application {
+    medClass openSc = new medClass();
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("view/sample.fxml"));
-        primaryStage.setTitle("My First App");
-        primaryStage.setScene(new Scene(root, 700, 400));
-        primaryStage.show();
+        openSc.loadSceneStage("view/sample.fxml", ":: FunParse - парсер картинок ::");
     }
 
 

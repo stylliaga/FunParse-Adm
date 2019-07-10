@@ -8,15 +8,22 @@ package sample.controllers;
         import javafx.event.ActionEvent;
         import javafx.fxml.FXML;
         import javafx.fxml.FXMLLoader;
+        import javafx.fxml.JavaFXBuilderFactory;
         import javafx.scene.Parent;
-        import javafx.scene.Scene;
+        import javafx.scene.Node;
         import javafx.scene.control.Button;
         import javafx.scene.control.PasswordField;
         import javafx.scene.control.TextField;
         import javafx.stage.Stage;
         import sample.DatabaseHandler;
+        import sample.animation.Shake;
+        import sample.medClass;
 
-public class Controller {
+        import javax.swing.*;
+
+public class Controller  {
+    medClass openSc = new medClass();
+    static String loginText;
 
     @FXML
     private ResourceBundle resources;
@@ -68,33 +75,37 @@ public class Controller {
     @FXML
     void initialize() {
         authSignInButton.setOnAction(event ->{
-            String loginText = loginField.getText().trim();
+            loginText = loginField.getText().trim();
             String loginPassword = passwordField.getText().trim();
+
+            //String login =  class1.getLogin();
+
+            //JOptionPane.showMessageDialog(null,"loginText "+loginText);
+
+
 
             if(!loginText.equals("") && !loginPassword.equals("")){
                 loginUser(loginText, loginPassword);
             }else{
-                System.out.println("Вы не заполнили все поля!");
+                Shake userLoginAnimation    = new Shake(loginField);
+                Shake userPasswordAnimation = new Shake(passwordField);
+
+                userLoginAnimation.playAnim();
+                userPasswordAnimation.playAnim();
             }
+
         });
+
         loginSigninButton.setOnAction(event ->{
             loginSigninButton.getScene().getWindow().hide();
+            openSc.loadSceneStage("/sample/view/signUp.fxml",":: FunPars - регистрация пользователя ::");
 
-                FXMLLoader loader = new FXMLLoader();
-                loader.setLocation(getClass().getResource("/sample/view/signUp.fxml"));
 
-                try {
-                    loader.load();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
 
-                Parent root = loader.getRoot();
-                Stage stage = new Stage();
-                stage.setScene(new Scene(root));
-                stage.showAndWait();
+            //openNewScene();
         });
     }
+
     private void loginUser(String loginText, String loginPassword){
         DatabaseHandler dbHandler = new DatabaseHandler();
         User user = new User();
@@ -114,7 +125,15 @@ public class Controller {
         }
 
         if(counter >= 1){
-            System.out.println("Success!");
+            loginSigninButton.getScene().getWindow().hide();
+            openSc.loadSceneStage("/sample/view/app.fxml",":: FunPars - парсер картинок ::");
+        }else{
+            Shake userLoginAnimation    = new Shake(loginField);
+            Shake userPasswordAnimation = new Shake(passwordField);
+
+            userLoginAnimation.playAnim();
+            userPasswordAnimation.playAnim();
+
         }
     }
 

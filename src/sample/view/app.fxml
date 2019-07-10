@@ -11,6 +11,7 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -24,16 +25,30 @@
               <tabs>
                 <Tab text="Просмотр">
                   <content>
-                    <AnchorPane fx:id="paneViewImage" minHeight="0.0" minWidth="0.0" prefHeight="275.0" prefWidth="697.0">
+                    <AnchorPane fx:id="paneViewImage" minHeight="0.0" minWidth="0.0" prefHeight="275.0" prefWidth="697.0" style="-fx-background-color: #ccc;">
                            <children>
                               <ImageView fx:id="showNextImage" fitHeight="281.0" fitWidth="553.0" layoutX="139.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../assets/parashalkash.png" />
                                  </image>
                               </ImageView>
-                              <Button fx:id="previousImageButton" layoutX="8.0" layoutY="278.0" mnemonicParsing="false" onAction="#previousImageButton" text="Назад" />
-                              <Button fx:id="netxImageButton" layoutX="590.0" layoutY="278.0" mnemonicParsing="false" onAction="#netxImageButton" text="Вперед" />
-                              <Button fx:id="downloadFileButton" contentDisplay="GRAPHIC_ONLY" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#downloadFileButton" prefHeight="27.0" prefWidth="0.0">
+                              <Button fx:id="previousImageButton" layoutX="13.0" layoutY="261.0" mnemonicParsing="false" onAction="#previousImageButton" prefHeight="32.0" prefWidth="40.0">
+                                 <graphic>
+                                    <ImageView fitHeight="26.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true" smooth="false">
+                                       <image>
+                                          <Image url="@../assets/leftArrow.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic></Button>
+                              <Button fx:id="netxImageButton" layoutX="605.0" layoutY="261.0" mnemonicParsing="false" onAction="#netxImageButton">
+                                 <graphic>
+                                    <ImageView fitHeight="26.0" fitWidth="34.0" nodeOrientation="RIGHT_TO_LEFT" pickOnBounds="true" preserveRatio="true" smooth="false">
+                                       <image>
+                                          <Image url="@../assets/leftArrow.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic></Button>
+                              <Button fx:id="downloadFileButton" contentDisplay="GRAPHIC_ONLY" layoutX="13.0" layoutY="14.0" mnemonicParsing="false" onAction="#downloadFileButton" prefHeight="27.0" prefWidth="29.0">
                                  <cursor>
                                     <Cursor fx:constant="HAND" />
                                  </cursor>
@@ -71,8 +86,7 @@
                               <Separator layoutX="331.0" layoutY="2.0" orientation="VERTICAL" prefHeight="203.0" prefWidth="0.0" />
                               <Separator layoutY="75.0" prefHeight="2.0" prefWidth="330.0" />
                               <Separator layoutY="204.0" prefHeight="2.0" prefWidth="330.0" />
-                              <Label layoutX="343.0" layoutY="14.0" text="Изменить пароль:" textFill="#4c597c" />
-                              <PasswordField fx:id="inputOldPassword" layoutX="343.0" layoutY="36.0" onAction="#inputOldPassword" prefHeight="26.0" prefWidth="314.0" promptText="Введите старый пароль" />
+                              <Label layoutX="343.0" layoutY="70.0" text="Изменить пароль:" textFill="#4c597c" />
                               <PasswordField fx:id="inputNewPassword" layoutX="343.0" layoutY="94.0" onAction="#inputNewPassword" prefHeight="26.0" prefWidth="314.0" promptText="Введите новый пароль" />
                               <PasswordField fx:id="inputNewPassword2" layoutX="343.0" layoutY="129.0" onAction="#inputNewPassword2" prefHeight="26.0" prefWidth="314.0" promptText="Введите новый пароль еще раз" />
                               <Separator layoutX="335.0" layoutY="165.0" prefHeight="2.0" prefWidth="330.0" />
@@ -84,6 +98,8 @@
                                     <Button fx:id="saveSettings" mnemonicParsing="false" onAction="#saveSettings" prefHeight="26.0" prefWidth="124.0" text="Сохранить" />
                                 </buttons>
                               </ButtonBar>
+                              <Label layoutX="343.0" layoutY="14.0" text="Изменить e-mail:" textFill="#4c597c" />
+                              <TextField fx:id="inputNewEmail" layoutX="343.0" layoutY="36.0" onAction="#inputNewEmail" prefHeight="26.0" prefWidth="313.0" promptText="YourNew@email.com" />
                            </children>
                         </AnchorPane>
                   </content>
@@ -98,6 +114,7 @@
             </font>
         </Label>
       <ChoiceBox fx:id="urlSiteToParse" layoutX="424.0" layoutY="42.0" prefHeight="16.0" prefWidth="251.0" />
-      <Label layoutX="424.0" layoutY="19.0" text="URL откуда парсить:" textFill="#f8f4f4" />
+      <Label layoutX="424.0" layoutY="19.0" text="Откуда парсить:" textFill="#f8f4f4" />
+      <Label fx:id="loginLabel" layoutX="574.0" layoutY="11.0" prefHeight="16.0" prefWidth="101.0" textFill="#f2eeee" />
     </children>
 </AnchorPane>

@@ -1,18 +1,23 @@
 package sample.controllers;
 
-import java.net.DatagramPacket;
-import java.net.URL;
-import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import sample.controllers.ImageController;
+import javafx.stage.Stage;
 import sample.DatabaseHandler;
+import sample.medClass;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-public class signUpController {
+
+public class signUpController extends medClass {
 
     @FXML
     private ResourceBundle resources;
@@ -42,18 +47,27 @@ public class signUpController {
     private Button signUpButton;
 
     @FXML
+    private Button cancelSignUp;
+
+    @FXML
+    void cancelSignUp(ActionEvent event) {
+
+
+    }
+
+    @FXML
     void signUpButton(ActionEvent event) {
 
     }
 
     @FXML
     void signUpCheckBoxFemale(ActionEvent event) {
-
+        signUpCheckBoxMale.setSelected(false);
     }
 
     @FXML
     void signUpCheckBoxMale(ActionEvent event) {
-
+        signUpCheckBoxFemale.setSelected(false);
     }
 
     @FXML
@@ -82,14 +96,19 @@ public class signUpController {
         signUpButton.setOnAction(event -> {
             signUpNewUser();
         });
+
+        cancelSignUp.setOnAction(event ->{
+            cancelSignUp.getScene().getWindow().hide();
+            loadSceneStage("/sample/view/sample.fxml","FunParse");
+        });
     }
 
     private void signUpNewUser() {
         DatabaseHandler dbHandler = new DatabaseHandler();
-        String login    = signUpLogin.getText();
-        String password = signUpPassword.getText();
-        String email    = signUpEmail.getText();
-        String city     = signUpCity.getText();
+        String login    = signUpLogin.getText().trim();
+        String password = signUpPassword.getText().trim();
+        String email    = signUpEmail.getText().trim();
+        String city     = signUpCity.getText().trim();
         String gender   = "";
 
         if(signUpCheckBoxMale.isSelected()){
@@ -103,4 +122,5 @@ public class signUpController {
         dbHandler.signUpUser(user);
 
     }
+
 }

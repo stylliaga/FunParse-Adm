@@ -61,4 +61,63 @@ public class DatabaseHandler extends Config {
         return resSet;
     }
 
+    public void updateUser(User user){
+        String string1 = null;
+        String string2 = null;
+        String string3 = null;
+        String string4 = null;
+        String string5 = null;
+        String string6 = null;
+        String string7 = null;
+
+        if(user.getPassword() != ""){
+            string1 = "" + Constant.USERS_PASSWORD + "=?, ";
+        }
+        if(user.getEmail() != ""){
+            string2 = Constant.USERS_EMAIL + "=?, ";
+        }
+        if(user.getLanguage() != ""){
+            string3 = Constant.USERS_LANGUAGE + "=?, ";
+        }
+        if(user.getOnly18() != ""){
+            string4 = Constant.USERS_ONLY18 + "=?, ";
+        }
+        if(user.getSaveFolder() != ""){
+            string5 = Constant.USERS_SAVE_FOLDER + "=?,";
+        }
+        if(user.getSaveOnComp() != ""){
+            string6 = Constant.USERS_SAVE_ON_COMP + "=?, ";
+        }
+        if(user.getSortBy() != ""){
+            string7 = Constant.USERS_SORT_BY + "=?";
+        }
+       String update =  "UPDATE " + Constant.USER_TABLE + " SET " + "" +
+               "" + string1 + "" +
+               "" + string2 + "" +
+               "" + string3 + "" +
+               "" + string4 + "" +
+               "" + string5 + "" +
+               "" + string6 + "" +
+               "" + string7 + " WHERE " +
+               "" + Constant.USERS_LOGIN + "=?";
+
+        try {
+            PreparedStatement prST = getDbConnection().prepareStatement(update);
+            prST.setString(1, user.getPassword());
+            prST.setString(2, user.getEmail());
+            prST.setString(3, user.getLanguage());
+            prST.setString(4, user.getOnly18());
+            prST.setString(5, user.getSaveFolder());
+            prST.setString(6, user.getSaveOnComp());
+            prST.setString(7, user.getSortBy());
+            prST.setString(8, user.getLogin());
+            prST.executeUpdate();
+        }catch(SQLException e){
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

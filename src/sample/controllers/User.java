@@ -28,6 +28,21 @@ public class User {
         this.language = language;
         this.history = history;
     }
+    public User(String password, String email, String language, String only18, String saveFolder,
+                String saveOnComp, String login, String sortBy) {
+        this.login = login;
+        this.password = password;
+        this.email = email;
+        this.city = city;
+        this.gender = gender;
+        this.urlSiteToParse = urlSiteToParse;
+        this.sortBy = sortBy;
+        this.saveOnComp = saveOnComp;
+        this.saveFolder = saveFolder;
+        this.only18 = only18;
+        this.language = language;
+        this.history = history;
+    }
 
     public User() {
 
