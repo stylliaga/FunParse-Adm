@@ -113,44 +113,25 @@ public class ImageController {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }else{
+            Runtime runtime = Runtime.getRuntime();
+            try{runtime.exec("xdg-open " + uri);
+            }catch(IOException e){
+                e.printStackTrace();
+            }
         }
         return false;
-    }
-
-    public static boolean openWebpage(URL url) {
-        try {
-            return openWebpage(url.toURI());
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-    public static void openWebpage2 (String urlString) {
-        try {
-            Desktop.getDesktop().browse(new URL(urlString).toURI());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @FXML
     void buttonDonatForProger(ActionEvent event)  {
-        URL ur = null;
+        URI ur = null;
         try {
-            ur = new URL("http://google.ru");
-        } catch (MalformedURLException e) {
+            ur = new URI("https://money.yandex.ru/to/41001128606244/50");
+        } catch (URISyntaxException e) {
             e.printStackTrace();
         }
         openWebpage(ur);
-        /*
-        try {
-            Desktop.getDesktop().browse(new URI("https://money.yandex.ru/to/41001128606244/50"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }*/
-
     }
 
     @FXML
@@ -287,6 +268,26 @@ public class ImageController {
 
     }
 
+    public static void openBrowserUrl(String url) throws URISyntaxException{
+        Desktop desktop;
+        try{
+            desktop = Desktop.getDesktop();
+        }catch(Exception ex){
+            System.err.println("Класс Desktop не поддерживается!");
+            return;
+        }
+
+        if(!desktop.isSupported(Desktop.Action.BROWSE)){
+            System.err.println("BROWSE :не поддерживается!");
+            return;
+        }
+
+        try{
+            desktop.browse(new URL(url).toURI());
+        } catch (IOException ex){
+            System.err.println("Failed to Browse. " + ex.getLocalizedMessage());
+        }
+    }
 
     public void saveUserSetings(String login){
         DatabaseHandler dbHandler = new DatabaseHandler();
