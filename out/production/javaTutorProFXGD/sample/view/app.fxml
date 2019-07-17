@@ -40,7 +40,7 @@
                                        </image>
                                     </ImageView>
                                  </graphic></Button>
-                              <Button fx:id="netxImageButton" layoutX="605.0" layoutY="261.0" mnemonicParsing="false" onAction="#netxImageButton">
+                              <Button fx:id="nextImageButton" layoutX="605.0" layoutY="261.0" mnemonicParsing="false" onAction="#nextImageButton">
                                  <graphic>
                                     <ImageView fitHeight="26.0" fitWidth="34.0" nodeOrientation="RIGHT_TO_LEFT" pickOnBounds="true" preserveRatio="true" smooth="false">
                                        <image>
@@ -104,6 +104,26 @@
                         </AnchorPane>
                   </content>
                 </Tab>
+                  <Tab text="Отблагодарить">
+                     <content>
+                        <AnchorPane fx:id="paneDonats" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <Button fx:id="buttonDonatForProger" layoutX="129.0" layoutY="35.0" mnemonicParsing="false" onAction="#buttonDonatForProger" prefHeight="232.0" prefWidth="384.0">
+                                 <graphic>
+                                    <ImageView fitHeight="231.0" fitWidth="391.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../assets/donatForProger.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </Button>
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </Tab>
               </tabs>
             </TabPane>
             </children>

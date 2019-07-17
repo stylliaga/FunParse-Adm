@@ -14,4 +14,5 @@ public class Constant {
     public static final String USERS_ONLY18 = "only18";
     public static final String USERS_LANGUAGE = "language";
     public static final String USERS_HYSTORY = "history";
+    public static final String USERS_URL_PARSE = "urlSiteToParse";
 }

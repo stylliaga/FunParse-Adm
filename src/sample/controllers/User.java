@@ -29,13 +29,13 @@ public class User {
         this.history = history;
     }
     public User(String password, String email, String language, String only18, String saveFolder,
-                String saveOnComp, String login, String sortBy) {
+                String saveOnComp, String sortBy, String parseFrom, String login) {
         this.login = login;
         this.password = password;
         this.email = email;
         this.city = city;
         this.gender = gender;
-        this.urlSiteToParse = urlSiteToParse;
+        this.urlSiteToParse = parseFrom;
         this.sortBy = sortBy;
         this.saveOnComp = saveOnComp;
         this.saveFolder = saveFolder;
@@ -57,9 +57,7 @@ public class User {
         this.login = login;
     }
 
-    public String getPassword() {
-        return password;
-    }
+    public String getPassword() { return password; }
 
     public void setPassword(String password) {
         this.password = password;

@@ -24,6 +24,12 @@ package sample.controllers;
 public class Controller  {
     medClass openSc = new medClass();
     static String loginText;
+    public static String sortByD;
+    public static String saveOnCompD;
+    public static String saveFolderD;
+    public static String only18D;
+    public static String languageD;
+    static String urlSiteToParseD;
 
     @FXML
     private ResourceBundle resources;
@@ -85,7 +91,11 @@ public class Controller  {
 
 
             if(!loginText.equals("") && !loginPassword.equals("")){
-                loginUser(loginText, loginPassword);
+                try {
+                    loginUser(loginText, loginPassword);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }else{
                 Shake userLoginAnimation    = new Shake(loginField);
                 Shake userPasswordAnimation = new Shake(passwordField);
@@ -106,7 +116,7 @@ public class Controller  {
         });
     }
 
-    private void loginUser(String loginText, String loginPassword){
+    private void loginUser(String loginText, String loginPassword) throws SQLException {
         DatabaseHandler dbHandler = new DatabaseHandler();
         User user = new User();
 
@@ -115,15 +125,25 @@ public class Controller  {
 
         ResultSet result = dbHandler.getUser(user);
 
+
+        String resultMeta = "";
+        //resultMeta = result.getMetaData().getColumnCount();
+
         int counter = 0;
         try {
             while (result.next()) {
+                urlSiteToParseD =  result.getString("urlSiteToParse");
+                sortByD         = result.getString("sortBy");
+                saveOnCompD     = result.getString("saveOnComp");
+                saveFolderD     = result.getString("saveFolder");
+                only18D         = result.getString("only18");
+                languageD       = result.getString("language");
                 counter++;
             }
         }catch(SQLException e){
             e.printStackTrace();
         }
-
+        //JOptionPane.showMessageDialog(null,result.getMetaData().getColumnName(1));
         if(counter >= 1){
             loginSigninButton.getScene().getWindow().hide();
             openSc.loadSceneStage("/sample/view/app.fxml",":: FunPars - парсер картинок ::");

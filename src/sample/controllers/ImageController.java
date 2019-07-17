@@ -1,15 +1,26 @@
 package sample.controllers;
 
+import java.awt.*;
 import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
+
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import jdk.nashorn.internal.scripts.JO;
 import sample.controllers.Controller;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
@@ -20,12 +31,14 @@ import javax.swing.*;
 public class ImageController {
 
     private String folderOnComp;
-    //private String login;
-
-
-    //public String getLogin(){
-    ///    return login;
-    //}
+    Controller l            = new Controller();
+    String login            = l.loginText;
+    String settingSortBy    = l.sortByD;
+    String settingUrlSiteToParse   = l.urlSiteToParseD;
+    String settingSaveOnComp       = l.saveOnCompD;
+    String settingSaveFolder       = l.saveFolderD;
+    String settingOnly18           = l.only18D;
+    String settingLanguage         = l.languageD;
 
 
     @FXML
@@ -44,7 +57,7 @@ public class ImageController {
     private Button previousImageButton;
 
     @FXML
-    private Button netxImageButton;
+    private Button nextImageButton;
 
     @FXML
     private Button downloadFileButton;
@@ -68,14 +81,10 @@ public class ImageController {
     private CheckBox searchOnlyAdultImages;
 
     @FXML
-    private TextField inputNewEmail;
-
-    @FXML
     private PasswordField inputNewPassword;
 
     @FXML
     private PasswordField inputNewPassword2;
-
 
     @FXML
     private ChoiceBox<String> chooseLanguage;
@@ -84,20 +93,70 @@ public class ImageController {
     private Button saveSettings;
 
     @FXML
+    private TextField inputNewEmail;
+
+    @FXML
+    private AnchorPane paneDonats;
+
+    @FXML
+    private Button buttonDonatForProger;
+
+    @FXML
     private ChoiceBox<String> urlSiteToParse;
 
-    @FXML
-    private Label loginLabel;
+    public static boolean openWebpage(URI uri) {
+        Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+        if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+            try {
+                desktop.browse(uri);
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    public static boolean openWebpage(URL url) {
+        try {
+            return openWebpage(url.toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    public static void openWebpage2 (String urlString) {
+        try {
+            Desktop.getDesktop().browse(new URL(urlString).toURI());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     @FXML
-    void setChooseLanguage(ActionEvent event){
-        saveSettings.setDisable(false);
+    void buttonDonatForProger(ActionEvent event)  {
+        URL ur = null;
+        try {
+            ur = new URL("http://google.ru");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        openWebpage(ur);
+        /*
+        try {
+            Desktop.getDesktop().browse(new URI("https://money.yandex.ru/to/41001128606244/50"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }*/
+
     }
 
     @FXML
     void downloadFileButton(ActionEvent event) {
-
     }
+
     @FXML
     void inputNewEmail(ActionEvent event) {
         saveSettings.setDisable(false);
@@ -110,8 +169,9 @@ public class ImageController {
 
     @FXML
     void inputNewPassword2(ActionEvent event) {
-
+        //saveSettings.setDisable(false);
     }
+
 
     @FXML
     void setInputNewEmail(ActionEvent event) {
@@ -119,7 +179,7 @@ public class ImageController {
     }
 
     @FXML
-    void netxImageButton(ActionEvent event) {
+    void nextImageButton(ActionEvent event) {
 
     }
 
@@ -130,33 +190,31 @@ public class ImageController {
 
     @FXML
     void saveFolder(ActionEvent event) {
-        saveSettings.setDisable(false);
-        // показываем диалог окно куда сохраняем картинки
-        DirectoryChooser saveFolder = new DirectoryChooser();
-        saveFolder.setTitle("Папка для сохранения изображений:");
-        File selectDirectory = saveFolder.showDialog(saveImageOnComputer.getScene().getWindow());
-        if(selectDirectory != null){
-            selectDirectory.getAbsolutePath();
-        }
-        folderOnComp = selectDirectory.toString();
-
-        //JOptionPane.showMessageDialog(null,folderOnComp);
-
     }
 
     @FXML
     void saveImageOnComputer(ActionEvent event) {
-        saveSettings.setDisable(false);
+        if (saveImageOnComputer.isSelected() == true){
+            saveSettings.setDisable(false);
+            saveFolder.setDisable(false);
+        }else{
+            if(saveSettings.isDisable()){
+                saveSettings.setDisable(true);}
+            saveFolder.setDisable(true);
+        }
     }
 
     @FXML
     void saveSettings(ActionEvent event) {
-        //saveUserSetings();
     }
 
     @FXML
     void searchOnlyAdultImages(ActionEvent event) {
-        saveSettings.setDisable(false);
+        if (searchOnlyAdultImages.isSelected() == true){
+            saveSettings.setDisable(false);
+        }else if(saveSettings.isDisable()){
+            saveSettings.setDisable(true);
+        }
     }
 
     @FXML
@@ -172,17 +230,10 @@ public class ImageController {
     }
 
 
-    Controller l = new Controller();
-    String login = l.loginText;
-
     @FXML
     void initialize() {
-
-        JOptionPane.showMessageDialog(null,login);
-
-        //loginLabel.setText(getLogin());
-
-        saveSettings.setDisable(true);
+        // по умолчанию кнопк указания адреса сохранения изображений отключена
+        saveFolder.setDisable(true);
 
         //выбор языка интерфейса программы
         chooseLanguage.setItems(FXCollections.observableArrayList("Русский","English"));
@@ -192,17 +243,61 @@ public class ImageController {
         urlSiteToParse.setItems(FXCollections.observableArrayList("VK.com","Pikabu.ru","Yaplakal.ru","Fishki.net"));
         urlSiteToParse.setValue("VK.com");
 
-        // кнопка сохранения настроек
-        //DatabaseHandler dbHandler = new DatabaseHandler();
+        //------------ загружаем настройки откуда парсить и языка -----------//
+
+        // откуда парсить - адрес сайта
+        urlSiteToParse.setValue(settingUrlSiteToParse);
+        // язык программы
+        chooseLanguage.setValue(settingLanguage);
+        // ---------- конец загрузки настроек ------------//
+
+
+       saveSettings.setDisable(true);
+
+       // при выборе языка кнопка Сохранить настройки становится доступна
+        chooseLanguage.setOnAction(event ->{
+                saveSettings.setDisable(false);
+        });
+
+        // при выборе сайта откуда парсим кнопка Сохранить настройки становится доступна
+        urlSiteToParse.setOnAction(event ->{
+                saveSettings.setDisable(false);
+        });
+
+
+        // при наборе пароля кнопка сохранить настройки становится доступна
+        inputNewPassword.setOnKeyPressed(keyEvent -> {
+            saveSettings.setDisable(false);
+        });
+
+        saveFolder.setOnAction(event -> {
+            // показываем диалог окно куда сохраняем картинки
+            DirectoryChooser saveFolder = new DirectoryChooser();
+            saveFolder.setTitle("Папка для сохранения изображений:");
+            File selectDirectory = saveFolder.showDialog(saveImageOnComputer.getScene().getWindow());
+            if(selectDirectory != null){
+                selectDirectory.getAbsolutePath();
+            }
+            folderOnComp = selectDirectory.toString();
+        });
+        // кнопка сохранения настроек - передаем логин, для записи настроек именно для этого юзера
         saveSettings.setOnAction(event -> {
             saveUserSetings(login);
-
         });
+
     }
+
+
     public void saveUserSetings(String login){
         DatabaseHandler dbHandler = new DatabaseHandler();
-        String password = inputNewPassword.getText().trim();
-        String email    = inputNewEmail.getText().trim();
+        User user = new User();
+
+        String password = "";
+        if(!inputNewPassword.getText().trim().equals("")){ password = inputNewPassword.getText().trim();}
+
+        String email    = "";
+        if(!inputNewEmail.getText().trim().equals("")){ email = inputNewEmail.getText().trim();}
+
         String language = chooseLanguage.getValue();
         String getOnly18;
         if(searchOnlyAdultImages.isSelected()){
@@ -210,31 +305,31 @@ public class ImageController {
         }else{
             getOnly18 = "0";
         }
-        String saveFolderAdress = folderOnComp;
+        if(folderOnComp == null){ folderOnComp = "";}
         String saveOnComp;
         if(saveImageOnComputer.isSelected()){
             saveOnComp = "1";
         }else{
             saveOnComp = "0";
         }
-       // class2.setLogin(login);
-       //String loginU = getLogin();
-        String sortBy;
-        if(sortImagesByPopular.isSelected()){
-            sortBy = "1";
-        }else{
-            sortBy = "0";
-        }
-        JOptionPane.showMessageDialog(null,"password - "  + password+"\n" +
-                                                        "email - "      + email +"\n" +
-                                                        "language -"    +language +"\n" +
-                                                        "getOnly18  -"  + getOnly18 +"\n" +
-                                                        "saveFolderAdress -" + saveFolderAdress +"\n" +
-                                                        "saveOnComp -"  + saveOnComp + "\n" +
-                                                        "login - "      + login +"\n" +
-                                                        "sortBy - "     + sortBy+"");
-        //User user = new User(password,email,language,getOnly18,saveFolderAdress,saveOnComp,login,sortBy);
-        //User user = new User(password,email,language,getOnly18);
-        //dbHandler.updateUser(user);
+
+        String sortBy = "";
+        if(sortImagesByPopular.isSelected()){ sortBy = "1";}
+        if(sortImagesByDate.isSelected()){ sortBy = "0";}
+
+        String parseFrom = urlSiteToParse.getValue();
+        user.setPassword(password);
+        user.setEmail(email);
+        user.setLanguage(language);
+        user.setOnly18(getOnly18);
+        user.setSaveFolder(folderOnComp);
+        user.setSaveOnComp(saveOnComp);
+        user.setSortBy(sortBy);
+        user.setUrlSiteToParse(parseFrom);
+        user.setLogin(login);
+
+        dbHandler.updateUser(user);
+
     }
+
 }

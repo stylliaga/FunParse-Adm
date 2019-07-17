@@ -2,6 +2,7 @@ package sample;
 
 import sample.controllers.User;
 
+import javax.swing.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -61,62 +62,71 @@ public class DatabaseHandler extends Config {
         return resSet;
     }
 
-    public void updateUser(User user){
-        String string1 = null;
-        String string2 = null;
-        String string3 = null;
-        String string4 = null;
-        String string5 = null;
-        String string6 = null;
-        String string7 = null;
-
-        if(user.getPassword() != ""){
-            string1 = "" + Constant.USERS_PASSWORD + "=?, ";
-        }
-        if(user.getEmail() != ""){
-            string2 = Constant.USERS_EMAIL + "=?, ";
-        }
-        if(user.getLanguage() != ""){
-            string3 = Constant.USERS_LANGUAGE + "=?, ";
-        }
-        if(user.getOnly18() != ""){
-            string4 = Constant.USERS_ONLY18 + "=?, ";
-        }
-        if(user.getSaveFolder() != ""){
-            string5 = Constant.USERS_SAVE_FOLDER + "=?,";
-        }
-        if(user.getSaveOnComp() != ""){
-            string6 = Constant.USERS_SAVE_ON_COMP + "=?, ";
-        }
-        if(user.getSortBy() != ""){
-            string7 = Constant.USERS_SORT_BY + "=?";
-        }
-       String update =  "UPDATE " + Constant.USER_TABLE + " SET " + "" +
-               "" + string1 + "" +
-               "" + string2 + "" +
-               "" + string3 + "" +
-               "" + string4 + "" +
-               "" + string5 + "" +
-               "" + string6 + "" +
-               "" + string7 + " WHERE " +
-               "" + Constant.USERS_LOGIN + "=?";
+    public ResultSet updateUser(User user){
+        ResultSet resSet = null;
+        String string1 = "";
+        String string2 = "";
+        String string3 = "";
+        String string4 = "";
+        String string5 = "";
+        String string6 = "";
+        String string7 = "";
+        String string8 = "";
 
         try {
+
+            if(user.getPassword() != ""){
+                string1 = "" + Constant.USERS_PASSWORD + "='" + user.getPassword() +"', ";
+                 //= ;
+            }
+            if(user.getEmail() != ""){
+                string2 = Constant.USERS_EMAIL + "='" + user.getEmail() + "', ";
+                //userGets2 = ;
+            }
+            if(user.getLanguage() != ""){
+                string3 = Constant.USERS_LANGUAGE + "='" + user.getLanguage() + "', ";
+                //userGets3 = ;
+            }
+            if(user.getOnly18() != ""){
+                string4 = Constant.USERS_ONLY18 + "='" + user.getOnly18() + "', ";
+                //userGets4 = ;
+            }
+            if(user.getSaveFolder() != ""){
+                string5 = Constant.USERS_SAVE_FOLDER + "='" + user.getSaveFolder() + "', ";
+                //userGets5 = ;
+            }
+            if(user.getSaveOnComp() != ""){
+                string6 = Constant.USERS_SAVE_ON_COMP + "='" + user.getSaveOnComp() + "', ";
+                //userGets6 = ;
+            }
+            if(user.getSortBy() != ""){
+                string7 = Constant.USERS_SORT_BY + "='" + user.getSortBy() + "', ";
+                //userGets7 = ;
+            }
+            if(user.getUrlSiteToParse() != ""){
+                string8 = Constant.USERS_URL_PARSE + "='" + user.getUrlSiteToParse() + "'";
+                //userGets8 = ;
+            }
+            String update =  "UPDATE " + Constant.USER_TABLE + " SET " + "" +
+                    "" + string1 + "" +
+                    "" + string2 + "" +
+                    "" + string3 + "" +
+                    "" + string4 + "" +
+                    "" + string5 + "" +
+                    "" + string6 + "" +
+                    "" + string7 + "" +
+                    "" + string8 + " WHERE " +
+                    "" + Constant.USERS_LOGIN + "=?";
+
             PreparedStatement prST = getDbConnection().prepareStatement(update);
-            prST.setString(1, user.getPassword());
-            prST.setString(2, user.getEmail());
-            prST.setString(3, user.getLanguage());
-            prST.setString(4, user.getOnly18());
-            prST.setString(5, user.getSaveFolder());
-            prST.setString(6, user.getSaveOnComp());
-            prST.setString(7, user.getSortBy());
-            prST.setString(8, user.getLogin());
+            prST.setString(1, user.getLogin());
             prST.executeUpdate();
         }catch(SQLException e){
-            e.printStackTrace();
+            System.err.println(e.getMessage());
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+        return resSet;
     }
 
 
