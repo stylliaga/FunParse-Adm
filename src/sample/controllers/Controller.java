@@ -18,6 +18,7 @@ package sample.controllers;
         import sample.DatabaseHandler;
         import sample.animation.Shake;
         import sample.medClass;
+        import sample.parsers.VKParserImages;
 
         import javax.swing.*;
 
@@ -51,9 +52,11 @@ public class Controller  {
 
     @FXML
     private Button loginSigninButton;
+    VKParserImages pressButtonNext = new VKParserImages();
 
     @FXML
     void about(ActionEvent event) {
+        pressButtonNext.vkParserImages();
 
     }
 

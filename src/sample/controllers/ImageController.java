@@ -3,20 +3,13 @@ package sample.controllers;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import jdk.nashorn.internal.scripts.JO;
-import sample.controllers.Controller;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,13 +18,14 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
 import sample.DatabaseHandler;
-
-import javax.swing.*;
+import sample.parsers.VKParserImages;
 
 public class ImageController {
 
     private String folderOnComp;
     Controller l            = new Controller();
+    VKParserImages pressButtonNext = new VKParserImages();
+
     String login            = l.loginText;
     String settingSortBy    = l.sortByD;
     String settingUrlSiteToParse   = l.urlSiteToParseD;
@@ -161,6 +155,7 @@ public class ImageController {
 
     @FXML
     void nextImageButton(ActionEvent event) {
+        pressButtonNext.vkParserImages();
 
     }
 
