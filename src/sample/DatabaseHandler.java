@@ -72,6 +72,7 @@ public class DatabaseHandler extends Config {
         String string6 = "";
         String string7 = "";
         String string8 = "";
+        String string9 = "";
 
         try {
 
@@ -104,7 +105,11 @@ public class DatabaseHandler extends Config {
                 //userGets7 = ;
             }
             if(user.getUrlSiteToParse() != ""){
-                string8 = Constant.USERS_URL_PARSE + "='" + user.getUrlSiteToParse() + "'";
+                string8 = Constant.USERS_URL_PARSE + "='" + user.getUrlSiteToParse() + "',";
+                //userGets8 = ;
+            }
+            if(user.getHistory() != ""){
+                string9 = Constant.USERS_HYSTORY + "='" + user.getHistory() + "'";
                 //userGets8 = ;
             }
             String update =  "UPDATE " + Constant.USER_TABLE + " SET " + "" +
@@ -115,8 +120,10 @@ public class DatabaseHandler extends Config {
                     "" + string5 + "" +
                     "" + string6 + "" +
                     "" + string7 + "" +
-                    "" + string8 + " WHERE " +
+                    "" + string8 + "" +
+                    "" + string9 + " WHERE " +
                     "" + Constant.USERS_LOGIN + "=?";
+            System.out.println(update);
 
             PreparedStatement prST = getDbConnection().prepareStatement(update);
             prST.setString(1, user.getLogin());

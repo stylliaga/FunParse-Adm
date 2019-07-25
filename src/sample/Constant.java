@@ -15,6 +15,6 @@ public class Constant {
     public static final String USERS_LANGUAGE = "language";
     public static final String USERS_HYSTORY = "history";
     public static final String USERS_URL_PARSE = "urlSiteToParse";
-    public static final String VK_GROUP_DOMAIN = "-====";
-    public static final String VK_ACCESS_TOKEN = "======";
+    public static final String VK_GROUP_DOMAIN = "---------";
+    public static final String VK_ACCESS_TOKEN = "---------";
 }
