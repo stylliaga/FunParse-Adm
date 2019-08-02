@@ -12,7 +12,21 @@ public class User {
     private String saveFolder;
     private String only18;
     private String language;
-    private String history;
+    private String imgFun;
+    private String imgAdult;
+    private String videoGifFun;
+    private String videoGifAdult;
+    private String tableField;
+
+    public User(String login, String imgFun, String imgAdult, String videoGifFun, String videoGifAdult, String tableField) {
+        this.login  = login;
+        this.imgFun = imgFun;
+        this.imgAdult = imgAdult;
+        this.videoGifFun   = videoGifFun;
+        this.videoGifAdult = videoGifAdult;
+        this.tableField = tableField;
+
+    }
 
     public User(String login, String password, String email, String city, String gender) {
         this.login = login;
@@ -20,13 +34,6 @@ public class User {
         this.email = email;
         this.city = city;
         this.gender = gender;
-        this.urlSiteToParse = urlSiteToParse;
-        this.sortBy = sortBy;
-        this.saveOnComp = saveOnComp;
-        this.saveFolder = saveFolder;
-        this.only18 = only18;
-        this.language = language;
-        this.history = history;
     }
     public User(String password, String email, String language, String only18, String saveFolder,
                 String saveOnComp, String sortBy, String parseFrom, String login) {
@@ -41,8 +48,8 @@ public class User {
         this.saveFolder = saveFolder;
         this.only18 = only18;
         this.language = language;
-        this.history = history;
     }
+
 
     public User() {
 
@@ -135,14 +142,44 @@ public class User {
         this.language = language;
     }
 
-    public String getHistory() {
-        return history;
+    public String getImgFun() {
+        return imgFun;
     }
 
-    public void setHistory(String history) {
-        this.history = history;
+    public void setImgFun(String imgFun) {
+        this.imgFun = imgFun;
     }
 
+    public String getImgAdult() {
+        return imgAdult;
+    }
 
+    public void setImgAdult(String imgAdult) {
+        this.imgAdult = imgAdult;
+    }
+
+    public String getVideoGifFun() {
+        return videoGifFun;
+    }
+
+    public void setVideoGifFun(String videoGifFun) {
+        this.videoGifFun= videoGifFun;
+    }
+
+    public String getVideoGifAdult() {
+        return videoGifAdult;
+    }
+
+    public void setVideoGifAdult(String videoGifAdult) {
+        this.videoGifAdult= videoGifAdult;
+    }
+
+    public String getTableField() {
+        return tableField;
+    }
+
+    public void setTableField(String tableField) {
+        this.tableField= tableField;
+    }
 
 }

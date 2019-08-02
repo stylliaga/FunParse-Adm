@@ -1,24 +1,18 @@
 package sample.controllers;
 
-        import java.io.IOException;
         import java.net.URL;
         import java.sql.ResultSet;
         import java.sql.SQLException;
         import java.util.ResourceBundle;
         import javafx.event.ActionEvent;
         import javafx.fxml.FXML;
-        import javafx.fxml.FXMLLoader;
-        import javafx.fxml.JavaFXBuilderFactory;
-        import javafx.scene.Parent;
-        import javafx.scene.Node;
         import javafx.scene.control.Button;
         import javafx.scene.control.PasswordField;
         import javafx.scene.control.TextField;
-        import javafx.stage.Stage;
         import sample.DatabaseHandler;
         import sample.animation.Shake;
         import sample.medClass;
-        import sample.parsers.VKParserImages;
+        import sample.parsers.vk.VKParserImages;
 
         import javax.swing.*;
 
@@ -50,13 +44,11 @@ public class Controller  {
     @FXML
     private Button about;
 
-    @FXML
-    private Button loginSigninButton;
-    VKParserImages pressButtonNext = new VKParserImages();
+    //VKParserImages pressButtonNext = new VKParserImages();
 
     @FXML
     void about(ActionEvent event) {
-        pressButtonNext.vkParserImages();
+       // pressButtonNext.vkParserImagesAdult();
 
     }
 
@@ -109,14 +101,14 @@ public class Controller  {
 
         });
 
-        loginSigninButton.setOnAction(event ->{
+        /*loginSigninButton.setOnAction(event ->{
             loginSigninButton.getScene().getWindow().hide();
             openSc.loadSceneStage("/sample/view/signUp.fxml",":: FunPars - регистрация пользователя ::");
 
 
 
             //openNewScene();
-        });
+        });*/
     }
 
     private void loginUser(String loginText, String loginPassword) throws SQLException {
@@ -126,7 +118,7 @@ public class Controller  {
         user.setLogin(loginText);
         user.setPassword(loginPassword);
 
-        ResultSet result = dbHandler.getUser(user);
+        ResultSet result = dbHandler.getUserFromDB(user);
 
 
         String resultMeta = "";
@@ -135,12 +127,6 @@ public class Controller  {
         int counter = 0;
         try {
             while (result.next()) {
-                urlSiteToParseD =  result.getString("urlSiteToParse");
-                sortByD         = result.getString("sortBy");
-                saveOnCompD     = result.getString("saveOnComp");
-                saveFolderD     = result.getString("saveFolder");
-                only18D         = result.getString("only18");
-                languageD       = result.getString("language");
                 counter++;
             }
         }catch(SQLException e){
@@ -148,7 +134,7 @@ public class Controller  {
         }
         //JOptionPane.showMessageDialog(null,result.getMetaData().getColumnName(1));
         if(counter >= 1){
-            loginSigninButton.getScene().getWindow().hide();
+            authSignInButton.getScene().getWindow().hide();
             openSc.loadSceneStage("/sample/view/app.fxml",":: FunPars - парсер картинок ::");
         }else{
             Shake userLoginAnimation    = new Shake(loginField);

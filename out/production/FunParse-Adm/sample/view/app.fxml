@@ -55,13 +55,6 @@
                                                       <Image url="@../assets/greenOk.png" />
                                                    </image>
                                                 </ImageView>
-                                                <Label layoutX="278.0" layoutY="81.0" text="Картинок найдено/собрано:" />
-                                                <Label layoutX="476.0" layoutY="82.0" prefHeight="16.0" prefWidth="74.0" style="-fx-background-color: #dddbbb;" text="0" textAlignment="RIGHT">
-                                                   <font>
-                                                      <Font name="System Bold" size="13.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label layoutX="552.0" layoutY="81.0" text="/" />
                                              </children>
                                           </AnchorPane>
                                     </content>

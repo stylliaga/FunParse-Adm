@@ -1,331 +1,603 @@
 package sample.controllers;
 
-import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.ResourceBundle;
 
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.collections.FXCollections;
+import java.awt.*;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.sql.ResultSet;
+import java.util.ResourceBundle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.mysql.cj.xdevapi.Result;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.DirectoryChooser;
+import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.utils.URIBuilder;
+import sample.Constant;
 import sample.DatabaseHandler;
-import sample.parsers.VKParserImages;
+import sample.parsers.vk.HttpConnectionAgent;
+import sample.parsers.vk.VKParserImages;
+
+
+import javax.swing.*;
+
+import static javafx.scene.paint.Color.GREEN;
+import static sample.Constant.VK_ACCESS_TOKEN;
+
 
 public class ImageController {
 
+    //int rev;
+    //String groupDomain      = "";
+    //String typeOfContent    = "";
     private String folderOnComp;
-    Controller l            = new Controller();
-    VKParserImages pressButtonNext = new VKParserImages();
-
-    String login            = l.loginText;
-    String settingSortBy    = l.sortByD;
-    String settingUrlSiteToParse   = l.urlSiteToParseD;
-    String settingSaveOnComp       = l.saveOnCompD;
-    String settingSaveFolder       = l.saveFolderD;
-    String settingOnly18           = l.only18D;
-    String settingLanguage         = l.languageD;
 
 
-    @FXML
-    private ResourceBundle resources;
+    //VKParserImages l            = new VKParserImages();
+    //VKParserImages pressButtonNext = new VKParserImages();
 
-    @FXML
-    private URL location;
+///-----------------------------------------------//
+
+    DatabaseHandler dbHandler = new DatabaseHandler();
+    User user = new User();
+    int counter, offsetSrcImages, countAllImgInPublic = 0;
+    private int rev;
+    private String checkGroupDomain, groupDomain, typeOfContent;
+
+///-----------------------------------------------//
+
 
     @FXML
-    private AnchorPane paneViewImage;
+    private AnchorPane paneVk;
 
     @FXML
-    private ImageView showNextImage;
+    private Accordion accordionVk;
 
     @FXML
-    private Button previousImageButton;
+    private TitledPane accordionVkImage;
 
     @FXML
-    private Button nextImageButton;
+    private Button buttonStartImgParse;
 
     @FXML
-    private Button downloadFileButton;
+    private TextField inputUrlOtherPublicImg;
+
+    @FXML
+    private RadioButton radioParsImgOld;
+
+    @FXML
+    private RadioButton radioParsImgNew;
+
+    @FXML
+    private RadioButton radioImgFun;
+
+    @FXML
+    private RadioButton radioImgAdult;
+
+    @FXML
+    private RadioButton radioDownloadImgFromOwn;
+
+    @FXML
+    private RadioButton radioDownloadImgFromOther;
+
+    @FXML
+    private Label labelPreResultParsing;
+
+    @FXML
+    private Label labelResultParsing;
+
+    @FXML
+    private Label labelAlert;
+
+    @FXML
+    private TitledPane accordionVkGif;
+
+    @FXML
+    private Button buttonStartGifParse;
+
+    @FXML
+    private TextField inputUrlOtherPublicGif;
+
+    @FXML
+    private RadioButton radioParsGifOld;
+
+    @FXML
+    private RadioButton radioParsGifNew;
+
+    @FXML
+    private RadioButton radioGifFun;
+
+    @FXML
+    private RadioButton radioGifAdult;
+
+    @FXML
+    private RadioButton radioDowloadGifFromOwn;
+
+    @FXML
+    private RadioButton radioDowloadGifFromOther;
+
+    @FXML
+    private Button buttonStopParsingGif;
+
+    @FXML
+    private AnchorPane panePikabu;
+
+    @FXML
+    private AnchorPane paneYaplakal;
+
+    @FXML
+    private AnchorPane paneFishki;
 
     @FXML
     private AnchorPane paneSettings;
 
     @FXML
-    private RadioButton sortImagesByDate;
+    private CheckBox checkboxClearFieldImgAdult;
 
     @FXML
-    private RadioButton sortImagesByPopular;
+    private CheckBox checkboxClearFieldImgFun;
 
     @FXML
-    private CheckBox saveImageOnComputer;
+    private CheckBox checkboxClearFieldVideoAdult;
 
     @FXML
-    private Button saveFolder;
+    private CheckBox checkboxClearFieldVideoFun;
 
     @FXML
-    private CheckBox searchOnlyAdultImages;
+    private Button buttonClearTableField;
 
     @FXML
-    private PasswordField inputNewPassword;
+    private ImageView imgParsinEndOk;
 
     @FXML
-    private PasswordField inputNewPassword2;
+    void buttonClearTableField(ActionEvent event) {
+
+    }
 
     @FXML
-    private ChoiceBox<String> chooseLanguage;
+    void buttonStartGifParse(ActionEvent event) {
+
+    }
 
     @FXML
-    private Button saveSettings;
+    void buttonStartImgParse(ActionEvent event) {
+    }
 
     @FXML
-    private TextField inputNewEmail;
+    void buttonStopParsingImg(ActionEvent event) {
+        //stopParsing = 1;
+
+        //Runnable parsAndDownloadImages = new VKParserImages('0', "", "", stopParsing);
+        //new Thread(parsAndDownloadImages).interrupt();
+        //parsAndDownloadImages.vkParserImages();
+    }
 
     @FXML
-    private AnchorPane paneDonats;
+    void buttonStopParsingGif(ActionEvent event) {
+
+    }
 
     @FXML
-    private Button buttonDonatForProger;
+    void inputUrlOtherPublicGif(ActionEvent event) {
+
+    }
 
     @FXML
-    private ChoiceBox<String> urlSiteToParse;
+    void inputUrlOtherPublicImg(ActionEvent event) {
 
-    public static boolean openWebpage(URI uri) {
-        Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
-        if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
-            try {
-                desktop.browse(uri);
-                return true;
-            } catch (Exception e) {
-                e.printStackTrace();
+    }
+
+    @FXML
+    void radioDowloadGifFromOther(ActionEvent event) {
+        radioDowloadGifFromOwn.setSelected(false);
+        inputUrlOtherPublicGif.setDisable(false);
+    }
+
+    @FXML
+    void radioDowloadGifFromOwn(ActionEvent event) {
+        radioDowloadGifFromOther.setSelected(false);
+        inputUrlOtherPublicGif.setDisable(false);
+    }
+
+    @FXML
+    void radioDownloadImgFromOther(ActionEvent event) {
+        radioDownloadImgFromOwn.setSelected(false);
+        inputUrlOtherPublicImg.setDisable(false);
+        checkRadiosForStartParsingButton();
+    }
+
+    @FXML
+    void radioDownloadImgFromOwn(ActionEvent event) {
+        inputUrlOtherPublicImg.setDisable(true);
+        radioDownloadImgFromOther.setSelected(false);
+        checkRadiosForStartParsingButton();
+    }
+
+    @FXML
+    void radioGifAdult(ActionEvent event) {
+        radioGifFun.setSelected(false);
+        inputUrlOtherPublicGif.setDisable(false);
+    }
+
+    @FXML
+    void radioGifFun(ActionEvent event) {
+        radioGifAdult.setSelected(false);
+        inputUrlOtherPublicGif.setDisable(false);
+    }
+
+    @FXML
+    void radioImgAdult(ActionEvent event) {
+        radioImgFun.setSelected(false);
+        checkRadiosForStartParsingButton();
+    }
+
+    @FXML
+    void radioImgFun(ActionEvent event) {
+        radioImgAdult.setSelected(false);
+        checkRadiosForStartParsingButton();
+    }
+
+    @FXML
+    void radioParsGifNew(ActionEvent event) {
+        radioParsGifOld.setSelected(false);
+        buttonStartGifParse.setDisable(false);
+    }
+
+    @FXML
+    void radioParsGifOld(ActionEvent event) {
+        radioParsGifNew.setSelected(false);
+        buttonStartGifParse.setDisable(false);
+    }
+
+    @FXML
+    void radioParsImgNew(ActionEvent event) {
+        radioParsImgOld.setSelected(false);
+        checkRadiosForStartParsingButton();
+    }
+
+    @FXML
+    void radioParsImgOld(ActionEvent event) {
+        radioParsImgNew.setSelected(false);
+        checkRadiosForStartParsingButton();
+    }
+
+
+    @FXML
+    void initialize(){
+
+        radioParsImgNew.setDisable(true);
+        radioParsImgOld.setDisable(true);
+        imgParsinEndOk.setVisible(false);
+
+        accordionVk.setExpandedPane(accordionVkImage);
+        makeLabelResultParsingVisible();
+
+
+        buttonStartGifParse.setOnAction(event ->{
+        });
+
+        buttonStartGifParse.setOnAction(event ->{
+        });
+
+        buttonStartImgParse.setOnAction(event ->{
+
+            counter         = 0;
+            offsetSrcImages = 0;
+
+            if(!radioDownloadImgFromOwn.isSelected() || !radioDowloadGifFromOwn.isSelected()) {groupDomain = "";}
+            makeLabelResultParsingVisible();
+            labelResultParsing.setText("0");
+            buttonStartImgParse.setDisable(true);
+            imgParsinEndOk.setVisible(false);
+
+            Thread t = new Thread(new Runnable() {
+                private volatile boolean running = true;
+
+                public void stop() {
+                    running = false;
+                }
+                @Override
+                public void run() {
+                    try {
+                        doParseAndSave();
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+                t.setName("ParsCounter");
+                t.setDaemon(true);
+                t.start();
+            //System.out.println(t.getState().toString());
+        });
+    }
+
+    public void doParsePublicId() throws MalformedURLException {
+        if (radioParsImgNew.isSelected()) {
+            rev = 1;
+        } else {
+            rev = 0;
+        }
+        if (radioImgAdult.isSelected()) {
+            typeOfContent = "adult";
+        }
+        if (radioImgFun.isSelected()) {
+            typeOfContent = "fun";
+        }
+        if (radioImgAdult.isSelected() && radioDownloadImgFromOwn.isSelected()) {
+            groupDomain = Constant.VK_ADULT_GROUP_DOMAIN;
+        }
+
+        if (radioImgFun.isSelected() && radioDownloadImgFromOwn.isSelected()) {
+            groupDomain = Constant.VK_FUN_GROUP_DOMAIN;
+        }
+
+        if (radioDownloadImgFromOther.isSelected()) {
+            URL inputOtherGroupDomainURL = null;
+            String otherGroupDomainURL = inputUrlOtherPublicImg.getText().trim();
+            if (otherGroupDomainURL != "") {
+                String regexp = "vk.com";
+                String regexp2 = "public";
+                //String replace = "";
+                Pattern pattern = Pattern.compile(regexp);
+                Matcher matcher = pattern.matcher(otherGroupDomainURL);
+                //System.out.println(matcher.find());
+                if(matcher.find()) {
+                    inputOtherGroupDomainURL = new URL(otherGroupDomainURL);
+                    groupDomain = inputOtherGroupDomainURL.getPath();
+                    groupDomain = removeCharAt(groupDomain, 0);
+                }
+                Pattern pattern2 = Pattern.compile(regexp2);
+                Matcher matcher2 = pattern2.matcher(groupDomain);
+                if(matcher2.find()){
+                    groupDomain = removeWordClubAt(groupDomain);
+                }
             }
+
+            URIBuilder uriBuilder = new URIBuilder();
+            // создаем и отправляем запрос к ВК апи - указываем какая группа, ключ доступа, отображать ли в ответе размер
+            // сколько записей надо спарсить, откуда парсить(в данном случае из альбома стены группы), версия АПИ ВК
+            uriBuilder.setScheme("https").setHost("api.vk.com").setPath("/method/groups.getById")
+                    .setParameter("group_ids", "" + groupDomain + "")
+                    .setParameter("access_token", VK_ACCESS_TOKEN)
+                    .setParameter("v", "5.61");
+
+            // создаем соединение
+            HttpResponse response = HttpConnectionAgent.connectResponse(uriBuilder);
+            // считываем номер ответа соединения
+            Integer status = response.getStatusLine().getStatusCode();
+            // если ответ 200 - т.е. ответ пришел, сервер дотупен то получаем контент
+            if (status == 200) {
+                StringWriter content = new StringWriter();
+
+                try {
+                    IOUtils.copy(response.getEntity().getContent(), content);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    System.exit(-1);
+                }
+                // записываем в строку ответ
+                String input = content.toString();
+                JsonParser parser = new JsonParser();
+                // парсим ответ и преобразыем в Джсон обьект с получение главного элемент response
+                JsonObject mainObject = parser.parse(input).getAsJsonObject();
+                // преобразуем обьект в массив и обращаемся к элементу items, где содержаться ссылки на размеры картинки
+                JsonArray pItem = mainObject.getAsJsonArray("response");
+                groupDomain = "-" + pItem.get(0).getAsJsonObject().get("id") + "";
+
+            }
+
+        }
+
+    }
+
+
+
+    public void checkRadiosForStartParsingButton(){
+
+        if(radioDownloadImgFromOwn.isSelected() || radioDownloadImgFromOther.isSelected()){
+            radioParsImgNew.setDisable(false);
+            radioParsImgOld.setDisable(false);
         }else{
-            Runtime runtime = Runtime.getRuntime();
-            try{runtime.exec("xdg-open " + uri);
-            }catch(IOException e){
-                e.printStackTrace();
+            radioParsImgOld.setDisable(true);
+            radioParsImgNew.setDisable(true);
+            radioParsImgNew.setSelected(false);
+            radioParsImgOld.setSelected(false);
+            buttonStartImgParse.setDisable(true);
+        }
+
+
+        if(radioParsImgOld.isSelected() || radioParsImgNew.isSelected()){
+            buttonStartImgParse.setDisable(false);
+        }else{
+            buttonStartImgParse.setDisable(true);
+        }
+
+    }
+
+    public static String removeCharAt(String s, int pos) {
+        return s.substring(0, pos) + s.substring(pos + 1);
+    }
+
+    public static String removeWordClubAt(String s) {
+        return s.substring(6);
+    }
+
+
+    public void makeLabelResultParsingUnvisible(){
+        labelResultParsing.setVisible(false);
+        labelPreResultParsing.setVisible(false);
+        labelAlert.setVisible(true);
+    }
+
+
+    public void makeLabelResultParsingVisible(){
+        labelResultParsing.setVisible(true);
+        labelPreResultParsing.setVisible(true);
+        labelAlert.setVisible(false);
+    }
+
+    public void doParseAndSave() throws MalformedURLException {
+        String stringSrcImages = "";
+        String stringSrcImagesAdult = "";
+        String stringSrcImagesFun = "";
+        // подключаем метод парсинга id паблика
+        doParsePublicId();
+        // если мы уже парсили эту группу то останавлдиваем поток и метод
+        if(checkGroupDomain == groupDomain){
+            makeLabelResultParsingUnvisible();
+            try{
+                //System.out.println("Thread stopped now2!");
+
+                Thread.sleep(100);
+                //System.out.println("Thread stopped now3!");
+
+            }catch (InterruptedException ex){
+                //System.out.println("Thread stopped now4!");
+                Thread.currentThread().interrupt();
+                //System.out.println("Thread stopped now5!");
             }
         }
-        return false;
-    }
 
-    @FXML
-    void buttonDonatForProger(ActionEvent event)  {
-        URI ur = null;
-        try {
-            ur = new URI("https://money.yandex.ru/to/41001128606244/50");
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-        openWebpage(ur);
-    }
+            for (int cicle = 0; cicle <= counter; cicle += 1000) {
+                //counter2 = counter;
+                URIBuilder uriBuilder = new URIBuilder();
+                // создаем и отправляем запрос к ВК апи - указываем какая группа, ключ доступа, отображать ли в ответе размер
+                // сколько записей надо спарсить, откуда парсить(в данном случае из альбома стены группы), версия АПИ ВК
+                uriBuilder.setScheme("https").setHost("api.vk.com").setPath("/method/photos.get")
+                        .setParameter("owner_id", "" + groupDomain + "")
+                        .setParameter("access_token", VK_ACCESS_TOKEN)
+                        .setParameter("photo_sizes", "1")
+                        .setParameter("count", "1000")
+                        .setParameter("album_id", "wall")
+                        .setParameter("rev", "" + rev + "")
+                        .setParameter("offset", "" + offsetSrcImages + "")
+                        .setParameter("v", "5.73");
+                // создаем соединение
+                HttpResponse response = HttpConnectionAgent.connectResponse(uriBuilder);
+                // считываем номер ответа соединения
+                Integer status = response.getStatusLine().getStatusCode();
+                // если ответ 200 - т.е. ответ пришел, сервер дотупен то получаем контент
+                if (status == 200) {
+                    StringWriter content = new StringWriter();
 
-    @FXML
-    void downloadFileButton(ActionEvent event) {
-    }
+                    try {
+                        IOUtils.copy(response.getEntity().getContent(), content);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        System.exit(-1);
+                    }
+                    // записываем в строку ответ
+                    String input = content.toString();
+                    JsonParser parser = new JsonParser();
+                    // парсим ответ и преобразыем в Джсон обьект с получение главного элемент response
+                    JsonObject mainObject = parser.parse(input).getAsJsonObject().getAsJsonObject("response");
+                    // получаем количестов изображений
+                    //JsonArray mainArrayCount = mainObject.getAsJsonArray("count");
+                    countAllImgInPublic = mainObject.get("count").getAsInt();
+                    // преобразуем обьект в массив и обращаемся к элементу items, где содержаться ссылки на размеры картинки
+                    JsonArray pItem = mainObject.getAsJsonArray("items");
+                    // в цикле обращаемся к каждому элементу items выдираем оттуда адрес изображения по фильтру
+                    // - нам нужен максимальный "w"
+                    for (int i = 0; i < pItem.size(); i++) {
+                        JsonObject pItems = (JsonObject) pItem.getAsJsonArray().get(i);
+                        JsonArray pSizes = pItems.getAsJsonArray("sizes");
+                        // int index = Array.asList(pSizes).indexOf("\"w\"");
+                        // из каждого sizes фильтруем по типу "x"(604x403) и пишем в массив
+                        for (int j = 0; j < pSizes.size(); j++) {
 
-    @FXML
-    void inputNewEmail(ActionEvent event) {
-        saveSettings.setDisable(false);
-    }
+                            JsonObject pWeightSizes = (JsonObject) pSizes.getAsJsonArray().get(j);
+                            String switchCasePWeightSize = pWeightSizes.get("type").toString();
+                            if (switchCasePWeightSize.equals("\"x\"") || switchCasePWeightSize.equals("\"w\"")) {
+                                //System.out.println("literaTypeSize - " + switchCasePWeightSize + " : " +
+                                //         "" + pWeightSizes.get("src").toString());
+                               // stringSrcImages = pWeightSizes.get("src").toString();
+                                stringSrcImages = stringSrcImages + pWeightSizes.get("src").toString() + ";";
+                                counter++;
+                                //counterCount = counter;
+                                Platform.runLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        labelResultParsing.setText(""+counter+"");
+                                    }
+                                });
+                                break;
+                            }
+                        }
+                    }
+                    // если колво картинок в паблике равно количеству спарсенных
+                    // то делаем видимым галочку что все спарсено
+                    if(counter == countAllImgInPublic){
+                        imgParsinEndOk.setVisible(true);
 
-    @FXML
-    void inputNewPassword(ActionEvent event) {
+                        //System.out.println("Thread stopped now1!");
+                        try{
+                            //System.out.println("Thread stopped now2!");
 
-    }
+                            Thread.sleep(100);
+                           //System.out.println("Thread stopped now3!");
 
-    @FXML
-    void inputNewPassword2(ActionEvent event) {
-        //saveSettings.setDisable(false);
-    }
+                        }catch (InterruptedException ex){
+                            //System.out.println("Thread stopped now4!");
+                            Thread.currentThread().interrupt();
+                           //System.out.println("Thread stopped now5!");
+                        }
+                    }else{
+                        makeLabelResultParsingVisible();
+                    }
 
+                    // если количество спарсенных картинок равно 1000 то логично предположить что их там больше
+                    // а значит добавляем еще один проход на 1000
+                    if (counter >= 1000) {
+                        offsetSrcImages = offsetSrcImages + 1000;
+                        System.out.println("Images on the Wall - " + counter);
+                        //imageController.changeJLabel(""+counter+"");
+                        //Platform.runLater(() -> imageController.labelResultParsing.setText(String.valueOf(counter)));
+                    } else {
+                        System.out.println("Images on the Wall - " + counter);
+                        //imageController.changeJLabel(""+counter+"");
+                        counter = 0;
+                    }
+                     //System.out.println(stringSrcImages);
+                    // записываем в бд в таблицу спарсенные адреса
+                    // картинок
 
-    @FXML
-    void setInputNewEmail(ActionEvent event) {
-        saveSettings.setDisable(false);
-    }
+                    if (typeOfContent == "adult") {
+                        stringSrcImagesAdult = stringSrcImages;
+                    }
+                    if (typeOfContent == "fun") {
+                        stringSrcImagesFun = stringSrcImages;
+                    }
 
-    @FXML
-    void nextImageButton(ActionEvent event) {
-        pressButtonNext.vkParserImages();
-
-    }
-
-    @FXML
-    void previousImageButton(ActionEvent event) {
-
-    }
-
-    @FXML
-    void saveFolder(ActionEvent event) {
-    }
-
-    @FXML
-    void saveImageOnComputer(ActionEvent event) {
-        if (saveImageOnComputer.isSelected() == true){
-            saveSettings.setDisable(false);
-            saveFolder.setDisable(false);
-        }else{
-            if(saveSettings.isDisable()){
-                saveSettings.setDisable(true);}
-            saveFolder.setDisable(true);
-        }
-    }
-
-    @FXML
-    void saveSettings(ActionEvent event) {
-    }
-
-    @FXML
-    void searchOnlyAdultImages(ActionEvent event) {
-        if (searchOnlyAdultImages.isSelected() == true){
-            saveSettings.setDisable(false);
-        }else if(saveSettings.isDisable()){
-            saveSettings.setDisable(true);
-        }
-    }
-
-    @FXML
-    void sortImagesByDate(ActionEvent event) {
-        saveSettings.setDisable(false);
-        sortImagesByPopular.setSelected(false);
-    }
-
-    @FXML
-    void sortImagesByPopular(ActionEvent event) {
-        saveSettings.setDisable(false);
-        sortImagesByDate.setSelected(false);
-    }
-
-
-    @FXML
-    void initialize() {
-        // по умолчанию кнопк указания адреса сохранения изображений отключена
-        saveFolder.setDisable(true);
-
-        //выбор языка интерфейса программы
-        chooseLanguage.setItems(FXCollections.observableArrayList("Русский","English"));
-        chooseLanguage.setValue("Русский");
-
-        //раскрываем список откуда парсить
-        urlSiteToParse.setItems(FXCollections.observableArrayList("VK.com","Pikabu.ru","Yaplakal.ru","Fishki.net"));
-        urlSiteToParse.setValue("VK.com");
-
-        //------------ загружаем настройки откуда парсить и языка -----------//
-
-        // откуда парсить - адрес сайта
-        urlSiteToParse.setValue(settingUrlSiteToParse);
-        // язык программы
-        chooseLanguage.setValue(settingLanguage);
-        // ---------- конец загрузки настроек ------------//
-
-
-       saveSettings.setDisable(true);
-
-       // при выборе языка кнопка Сохранить настройки становится доступна
-        chooseLanguage.setOnAction(event ->{
-                saveSettings.setDisable(false);
-        });
-
-        // при выборе сайта откуда парсим кнопка Сохранить настройки становится доступна
-        urlSiteToParse.setOnAction(event ->{
-                saveSettings.setDisable(false);
-        });
-
-
-        // при наборе пароля кнопка сохранить настройки становится доступна
-        inputNewPassword.setOnKeyPressed(keyEvent -> {
-            saveSettings.setDisable(false);
-        });
-
-        saveFolder.setOnAction(event -> {
-            // показываем диалог окно куда сохраняем картинки
-            DirectoryChooser saveFolder = new DirectoryChooser();
-            saveFolder.setTitle("Папка для сохранения изображений:");
-            File selectDirectory = saveFolder.showDialog(saveImageOnComputer.getScene().getWindow());
-            if(selectDirectory != null){
-                selectDirectory.getAbsolutePath();
+                    user.setImgFun(stringSrcImagesFun);
+                    user.setImgAdult(stringSrcImagesAdult);
+                    user.setVideoGifFun("");
+                    user.setVideoGifAdult("");
+                    user.setLogin(Constant.ADMIN_LOGIN);
+                    dbHandler.insertNewDataInDB(user);
+                    //System.out.println(stringSrcImages);
+                    stringSrcImages = "";
+                    stringSrcImagesAdult = "";
+                    stringSrcImagesFun = "";
+                }
             }
-            folderOnComp = selectDirectory.toString();
-        });
-        // кнопка сохранения настроек - передаем логин, для записи настроек именно для этого юзера
-        saveSettings.setOnAction(event -> {
-            saveUserSetings(login);
-        });
-
+            // создаем переменную для проверки чтьо бы если группа уже парсилась то мы выкинули предупреждлеие
+            checkGroupDomain = groupDomain;
     }
 
-    public static void openBrowserUrl(String url) throws URISyntaxException{
-        Desktop desktop;
-        try{
-            desktop = Desktop.getDesktop();
-        }catch(Exception ex){
-            System.err.println("Класс Desktop не поддерживается!");
-            return;
-        }
-
-        if(!desktop.isSupported(Desktop.Action.BROWSE)){
-            System.err.println("BROWSE :не поддерживается!");
-            return;
-        }
-
-        try{
-            desktop.browse(new URL(url).toURI());
-        } catch (IOException ex){
-            System.err.println("Failed to Browse. " + ex.getLocalizedMessage());
-        }
-    }
-
-    public void saveUserSetings(String login){
-        DatabaseHandler dbHandler = new DatabaseHandler();
-        User user = new User();
-
-        String password = "";
-        if(!inputNewPassword.getText().trim().equals("")){ password = inputNewPassword.getText().trim();}
-
-        String email    = "";
-        if(!inputNewEmail.getText().trim().equals("")){ email = inputNewEmail.getText().trim();}
-
-        String language = chooseLanguage.getValue();
-        String getOnly18;
-        if(searchOnlyAdultImages.isSelected()){
-            getOnly18 = "1";
-        }else{
-            getOnly18 = "0";
-        }
-        if(folderOnComp == null){ folderOnComp = "";}
-        String saveOnComp;
-        if(saveImageOnComputer.isSelected()){
-            saveOnComp = "1";
-        }else{
-            saveOnComp = "0";
-        }
-
-        String sortBy = "";
-        if(sortImagesByPopular.isSelected()){ sortBy = "1";}
-        if(sortImagesByDate.isSelected()){ sortBy = "0";}
-
-        String parseFrom = urlSiteToParse.getValue();
-        user.setPassword(password);
-        user.setEmail(email);
-        user.setLanguage(language);
-        user.setOnly18(getOnly18);
-        user.setSaveFolder(folderOnComp);
-        user.setSaveOnComp(saveOnComp);
-        user.setSortBy(sortBy);
-        user.setUrlSiteToParse(parseFrom);
-        user.setLogin(login);
-
-        dbHandler.updateUser(user);
-
-    }
 
 }

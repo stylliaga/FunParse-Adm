@@ -1,5 +1,6 @@
 package sample;
 
+import sample.controllers.ImageController;
 import sample.controllers.User;
 
 import javax.swing.*;
@@ -24,7 +25,7 @@ public class DatabaseHandler extends Config {
         return dbConnection;
     }
 
-    public void signUpUser(User user){
+    public void dbSignUpUser(User user){
         String insert = "INSERT INTO " + Constant.USER_TABLE + " (" + Constant.USERS_LOGIN + ","
                         + Constant.USERS_PASSWORD + "," + Constant.USERS_EMAIL+ ","
                         + Constant.USERS_CITY + "," + Constant.USERS_GENDER + ") VALUES (?,?,?,?,?)";
@@ -43,7 +44,7 @@ public class DatabaseHandler extends Config {
             e.printStackTrace();
         }
     }
-    public ResultSet getUser(User user){
+    public ResultSet getUserFromDB(User user){
         ResultSet resSet = null;
 
         String select = "SELECT * FROM " + Constant.USER_TABLE + " WHERE " + Constant.USERS_LOGIN + " =? AND " +
@@ -72,13 +73,12 @@ public class DatabaseHandler extends Config {
         String string6 = "";
         String string7 = "";
         String string8 = "";
-        String string9 = "";
 
         try {
 
             if(user.getPassword() != ""){
                 string1 = "" + Constant.USERS_PASSWORD + "='" + user.getPassword() +"', ";
-                 //= ;
+                //= ;
             }
             if(user.getEmail() != ""){
                 string2 = Constant.USERS_EMAIL + "='" + user.getEmail() + "', ";
@@ -108,10 +108,7 @@ public class DatabaseHandler extends Config {
                 string8 = Constant.USERS_URL_PARSE + "='" + user.getUrlSiteToParse() + "',";
                 //userGets8 = ;
             }
-            if(user.getHistory() != ""){
-                string9 = Constant.USERS_HYSTORY + "='" + user.getHistory() + "'";
-                //userGets8 = ;
-            }
+
             String update =  "UPDATE " + Constant.USER_TABLE + " SET " + "" +
                     "" + string1 + "" +
                     "" + string2 + "" +
@@ -120,8 +117,7 @@ public class DatabaseHandler extends Config {
                     "" + string5 + "" +
                     "" + string6 + "" +
                     "" + string7 + "" +
-                    "" + string8 + "" +
-                    "" + string9 + " WHERE " +
+                    "" + string8 + " WHERE " +
                     "" + Constant.USERS_LOGIN + "=?";
             System.out.println(update);
 
@@ -132,6 +128,50 @@ public class DatabaseHandler extends Config {
             System.err.println(e.getMessage());
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
+        }
+        return resSet;
+    }
+
+
+    public ResultSet insertNewDataInDB(User user){
+        boolean sqlQueryStopAndThreadToo = false;
+        ResultSet resSet = null;
+        String requestRow   = "";
+
+        try {
+
+            if(user.getImgFun() != ""){
+                requestRow = "(" + Constant.USERS_IMGFUN + ") VALUES ('" + user.getImgFun() + "')";
+                //userGets8 = ;
+            }
+            if(user.getImgAdult() != ""){
+                requestRow = "(" + Constant.USERS_IMGADULT + ") VALUES ('" + user.getImgAdult() + "')";
+                //userGets8 = ;
+            }
+            if(user.getVideoGifFun() != ""){
+                requestRow = "(" + Constant.USERS_VIDEOGIFFUN + ") VALUES ('" + user.getVideoGifFun() + "')";
+                //userGets8 = ;
+            }
+            if(user.getVideoGifFun() != ""){
+                requestRow = "(" + Constant.USERS_VIDEOGIFADULT + ") VALUES ('" + user.getVideoGifAdult() + "')";
+                //userGets8 = ;
+            }
+                    String update =  "INSERT INTO " + Constant.DATA_ADMIN + " " + requestRow;
+           //System.out.println(update);
+
+            PreparedStatement prST = getDbConnection().prepareStatement(update);
+           // prST.setString(1, Constant.ADMIN_LOGIN);
+            prST.executeUpdate();
+        }catch(SQLException e){
+            ImageController stopThread = new ImageController();
+            //stopThread.;
+            System.err.println(e.getMessage());
+            sqlQueryStopAndThreadToo = true;
+        } catch (ClassNotFoundException e) {
+            ImageController stopThread = new ImageController();
+            //stopThread.stop();
+            e.printStackTrace();
+
         }
         return resSet;
     }

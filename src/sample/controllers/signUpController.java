@@ -119,7 +119,7 @@ public class signUpController extends medClass {
 
         User user = new User(login,password,email,city,gender);
 
-        dbHandler.signUpUser(user);
+        dbHandler.dbSignUpUser(user);
 
     }
 

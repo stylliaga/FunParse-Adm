@@ -1,4 +1,4 @@
-package sample.parsers;
+package sample.parsers.vk;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
