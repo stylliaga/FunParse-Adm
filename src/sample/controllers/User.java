@@ -17,6 +17,9 @@ public class User {
     private String videoGifFun;
     private String videoGifAdult;
     private String tableField;
+    private String publicURL;
+    private String imgURLs;
+    private String typeOfContent;
 
     public User(String login, String imgFun, String imgAdult, String videoGifFun, String videoGifAdult, String tableField) {
         this.login  = login;
@@ -27,6 +30,14 @@ public class User {
         this.tableField = tableField;
 
     }
+
+    public User(String login, String imgURLs, String typeOfContent, String publicURL) {
+        this.login  = login;
+        this.imgURLs = imgURLs;
+        this.typeOfContent = typeOfContent;
+        this.publicURL   = publicURL;
+    }
+
 
     public User(String login, String password, String email, String city, String gender) {
         this.login = login;
@@ -146,9 +157,26 @@ public class User {
         return imgFun;
     }
 
+    public String getImgURLs() {
+        return imgURLs;
+    }
+
+    public void setImgURLs(String imgURLs) {
+        this.imgURLs = imgURLs;
+    }
+
+    public String getTypeOfContent() {
+        return typeOfContent;
+    }
+
+    public void setTypeOfContent(String typeOfContent) {
+        this.typeOfContent = typeOfContent;
+    }
+
     public void setImgFun(String imgFun) {
         this.imgFun = imgFun;
     }
+
 
     public String getImgAdult() {
         return imgAdult;
@@ -180,6 +208,14 @@ public class User {
 
     public void setTableField(String tableField) {
         this.tableField= tableField;
+    }
+
+    public String getPublicURL() {
+        return publicURL;
+    }
+
+    public void setPublicURL(String publicURL) {
+        this.publicURL= publicURL;
     }
 
 }

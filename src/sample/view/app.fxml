@@ -4,14 +4,13 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
@@ -31,37 +30,53 @@
                                     <content>
                                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                              <children>
-                                                <Button fx:id="buttonStartImgParse" disable="true" layoutX="503.0" layoutY="171.0" mnemonicParsing="false" onAction="#buttonStartImgParse" prefHeight="26.0" prefWidth="160.0" text="Парсить!" />
-                                                <TextField fx:id="inputUrlOtherPublicImg" disable="true" layoutX="278.0" layoutY="103.0" onAction="#inputUrlOtherPublicImg" prefHeight="26.0" prefWidth="384.0" promptText="Введите адрес паблика" />
-                                                <RadioButton fx:id="radioParsImgOld" layoutX="371.0" layoutY="156.0" mnemonicParsing="false" onAction="#radioParsImgOld" text="Старые" />
-                                                <RadioButton fx:id="radioParsImgNew" layoutX="278.0" layoutY="156.0" mnemonicParsing="false" onAction="#radioParsImgNew" text="Новые" />
-                                                <Label layoutX="7.0" layoutY="157.0" text="Парсить и загружать сначала:" />
-                                                <Label layoutX="175.0" layoutY="12.0" text="Парсим картинки и загружаем картинки в БД:" />
-                                                <RadioButton fx:id="radioImgFun" layoutX="187.0" layoutY="39.0" mnemonicParsing="false" onAction="#radioImgFun" text="Приколы" />
-                                                <RadioButton fx:id="radioImgAdult" layoutX="423.0" layoutY="39.0" mnemonicParsing="false" onAction="#radioImgAdult" text="+18" />
-                                                <Separator layoutY="75.0" prefHeight="0.0" prefWidth="662.0" />
-                                                <Label layoutX="58.0" layoutY="85.0" text="Загружать из паблика:" />
-                                                <RadioButton fx:id="radioDownloadImgFromOwn" layoutX="52.0" layoutY="107.0" mnemonicParsing="false" onAction="#radioDownloadImgFromOwn" text="своего" />
-                                                <RadioButton fx:id="radioDownloadImgFromOther" layoutX="151.0" layoutY="107.0" mnemonicParsing="false" onAction="#radioDownloadImgFromOther" text="чужого -&gt;" />
-                                                <Label fx:id="labelPreResultParsing" layoutX="503.0" layoutY="144.0" text="Спарсили:" />
-                                                <Label fx:id="labelResultParsing" layoutX="580.0" layoutY="144.0" text="0">
+                                                <Button fx:id="buttonStartImgParse" disable="true" layoutX="490.0" layoutY="134.0" mnemonicParsing="false" onAction="#buttonStartImgParse" prefHeight="63.0" prefWidth="169.0" text="Парсить!" />
+                                                <TextField fx:id="inputUrlOtherPublicImg" disable="true" layoutX="144.0" layoutY="88.0" onAction="#inputUrlOtherPublicImg" onInputMethodTextChanged="#inputUrlOtherPublicImg" prefHeight="26.0" prefWidth="180.0" promptText="Введите адрес паблика" />
+                                                <Label layoutX="365.0" layoutY="39.0" text="Сортировка:" />
+                                                <RadioButton fx:id="radioParsImgOld" layoutX="365.0" layoutY="87.0" mnemonicParsing="false" onAction="#radioParsImgOld" text="Старые" />
+                                                <RadioButton fx:id="radioParsImgNew" layoutX="365.0" layoutY="60.0" mnemonicParsing="false" onAction="#radioParsImgNew" text="Новые" />
+                                                <Label layoutX="218.0" layoutY="7.0" text="Парсим URL картинок и загружаем в БД" underline="true" />
+                                                <RadioButton fx:id="radioImgFun" layoutX="28.0" layoutY="58.0" mnemonicParsing="false" onAction="#radioImgFun" text="Приколы" />
+                                                <RadioButton fx:id="radioImgAdult" layoutX="28.0" layoutY="84.0" mnemonicParsing="false" onAction="#radioImgAdult" text="+18" />
+                                                <Separator layoutX="-1.0" layoutY="120.0" prefHeight="0.0" prefWidth="679.0" />
+                                                <Label layoutX="149.0" layoutY="38.0" text="Загружать из паблика:" />
+                                                <RadioButton fx:id="radioDownloadImgFromOwn" layoutX="147.0" layoutY="59.0" mnemonicParsing="false" onAction="#radioDownloadImgFromOwn" text="своего" />
+                                                <RadioButton fx:id="radioDownloadImgFromOther" layoutX="242.0" layoutY="59.0" mnemonicParsing="false" onAction="#radioDownloadImgFromOther" text="чужого" />
+                                                <Label layoutX="522.0" layoutY="40.0" text="Статистика" />
+                                                <Label fx:id="labelResultParsingImgURFound" layoutX="565.0" layoutY="58.0" prefHeight="16.0" prefWidth="93.0" style="-fx-background-color: #dddbbb;" text="0" textAlignment="RIGHT">
                                                    <font>
                                                       <Font name="System Bold" size="13.0" />
                                                    </font>
                                                 </Label>
-                                                <Label fx:id="labelAlert" layoutX="470.0" layoutY="144.0" text="Вы уже парсили эту группу!" textFill="#b50808" />
-                                                <ImageView fx:id="imgParsinEndOk" fitHeight="33.0" fitWidth="25.0" layoutX="472.0" layoutY="172.0" pickOnBounds="true" preserveRatio="true">
-                                                   <image>
-                                                      <Image url="@../assets/greenOk.png" />
-                                                   </image>
-                                                </ImageView>
-                                                <Label layoutX="278.0" layoutY="81.0" text="Картинок найдено/собрано:" />
-                                                <Label layoutX="476.0" layoutY="82.0" prefHeight="16.0" prefWidth="74.0" style="-fx-background-color: #dddbbb;" text="0" textAlignment="RIGHT">
+                                                <Label layoutX="28.0" layoutY="40.0" text="Тематика:" />
+                                                <Label layoutX="492.0" layoutY="58.0" text="Найдено:" />
+                                                <Label layoutX="491.0" layoutY="77.0" text="Спарсено:" />
+                                                <Label fx:id="labelResultParsingImgURLNow" layoutX="565.0" layoutY="77.0" prefHeight="16.0" prefWidth="93.0" style="-fx-background-color: #dddbbb;" text="0" textAlignment="RIGHT">
                                                    <font>
                                                       <Font name="System Bold" size="13.0" />
                                                    </font>
                                                 </Label>
-                                                <Label layoutX="552.0" layoutY="81.0" text="/" />
+                                                <Label layoutX="491.0" layoutY="97.0" text="Всего:" />
+                                                <Label fx:id="labelResultParsingImgURLSum" layoutX="565.0" layoutY="96.0" prefHeight="16.0" prefWidth="93.0" style="-fx-background-color: #dddbbb;" text="0" textAlignment="RIGHT">
+                                                   <font>
+                                                      <Font name="System Bold" size="13.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label fx:id="labelParsingImgURLIsRunning" layoutX="178.0" layoutY="151.0" text="Парсинг запущен">
+                                                   <font>
+                                                      <Font name="System Italic" size="13.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label fx:id="labelParsingImgURLFinished" layoutX="178.0" layoutY="151.0" text="Парсинг закончен." textFill="#276828">
+                                                   <font>
+                                                      <Font name="System Bold" size="13.0" />
+                                                   </font></Label>
+                                                <Label fx:id="labelParsingImgURLAlert" layoutX="145.0" layoutY="151.0" text="Вы уже парсили эту группу!" textFill="#b50808">
+                                                   <font>
+                                                      <Font name="System Bold" size="13.0" />
+                                                   </font></Label>
+                                                <Label fx:id="labelParsingImgURLReady" layoutX="201.0" layoutY="151.0" text="Готов к работе" />
+                                                <ProgressBar fx:id="progressbarImgParsing" layoutX="48.0" layoutY="173.0" prefHeight="20.0" prefWidth="384.0" progress="0.0" />
                                              </children>
                                           </AnchorPane>
                                     </content>

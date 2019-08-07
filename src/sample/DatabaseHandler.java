@@ -21,7 +21,6 @@ public class DatabaseHandler extends Config {
 
         Class.forName("com.mysql.cj.jdbc.Driver");
         dbConnection = DriverManager.getConnection(connectionString,dbUser,dbPass);
-
         return dbConnection;
     }
 
@@ -134,46 +133,31 @@ public class DatabaseHandler extends Config {
 
 
     public ResultSet insertNewDataInDB(User user){
-        boolean sqlQueryStopAndThreadToo = false;
         ResultSet resSet = null;
-        String requestRow   = "";
-
         try {
-
-            if(user.getImgFun() != ""){
-                requestRow = "(" + Constant.USERS_IMGFUN + ") VALUES ('" + user.getImgFun() + "')";
-                //userGets8 = ;
-            }
-            if(user.getImgAdult() != ""){
-                requestRow = "(" + Constant.USERS_IMGADULT + ") VALUES ('" + user.getImgAdult() + "')";
-                //userGets8 = ;
-            }
-            if(user.getVideoGifFun() != ""){
-                requestRow = "(" + Constant.USERS_VIDEOGIFFUN + ") VALUES ('" + user.getVideoGifFun() + "')";
-                //userGets8 = ;
-            }
-            if(user.getVideoGifFun() != ""){
-                requestRow = "(" + Constant.USERS_VIDEOGIFADULT + ") VALUES ('" + user.getVideoGifAdult() + "')";
-                //userGets8 = ;
-            }
-                    String update =  "INSERT INTO " + Constant.DATA_ADMIN + " " + requestRow;
-           //System.out.println(update);
+             String update =  "INSERT "+ Constant.DATA_ADMIN +" (" + Constant.USERS_RESOURCE_OF_URLS + " , "
+                                                                   + Constant.USERS_TYPE_OF_URLS + " , "
+                                                                   + Constant.USERS_PUBLICURL + " ) " +
+                              "VALUES " +"( ? , ? , ? )";
 
             PreparedStatement prST = getDbConnection().prepareStatement(update);
-           // prST.setString(1, Constant.ADMIN_LOGIN);
+            prST.setString(1, user.getImgURLs());
+            prST.setString(2, user.getTypeOfContent());
+            prST.setString(3, user.getPublicURL());
             prST.executeUpdate();
         }catch(SQLException e){
-            ImageController stopThread = new ImageController();
-            //stopThread.;
             System.err.println(e.getMessage());
-            sqlQueryStopAndThreadToo = true;
         } catch (ClassNotFoundException e) {
-            ImageController stopThread = new ImageController();
-            //stopThread.stop();
             e.printStackTrace();
 
         }
         return resSet;
+    }
+    public String insertRequestRow(String nameOfTableField, String gettersOfRequest){
+        String requestRow = "";
+        requestRow = "(" + nameOfTableField + ") VALUES ('" + gettersOfRequest + "')";
+
+        return requestRow;
     }
 
 

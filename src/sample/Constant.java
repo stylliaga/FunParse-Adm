@@ -21,7 +21,12 @@ public class Constant {
     public static final String USERS_IMGADULT       = "imgAdult";
     public static final String USERS_VIDEOGIFFUN    = "videoGifFun";
     public static final String USERS_VIDEOGIFADULT  = "videoGifAdult";
+    public static final String USERS_PUBLICURL      = "publicURL";
     public static final String USERS_URL_PARSE      = "urlSiteToParse";
+
+    public static final String USERS_RESOURCE_OF_URLS  = "URLs";
+    public static final String USERS_TYPE_OF_URLS      = "typeOfContent";
+
     public static final String VK_ADULT_GROUP_DOMAIN    = "-105702650";
     public static final String VK_FUN_GROUP_DOMAIN      = "-76582686";
     public static final String VK_ACCESS_TOKEN      = "157904bd157904bd157904bdb21512cfe011579157904bd484a2f82dafa87aafea496cf";

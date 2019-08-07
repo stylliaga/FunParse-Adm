@@ -2,6 +2,7 @@ package sample.controllers;
 
 
 import java.awt.*;
+import java.awt.event.InputMethodEvent;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
@@ -23,6 +24,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
@@ -54,12 +56,18 @@ public class ImageController {
 
     DatabaseHandler dbHandler = new DatabaseHandler();
     User user = new User();
-    int counter, offsetSrcImages, countAllImgInPublic = 0;
+    int counter, offsetSrcImages, countAllImgInPublic, countAllImgOfParsingSession = 0;
     private int rev;
-    private String checkGroupDomain, groupDomain, typeOfContent;
+    private String groupDomain, typeOfContent;
+
 
 ///-----------------------------------------------//
 
+    @FXML
+    private ResourceBundle resources;
+
+    @FXML
+    private URL location;
 
     @FXML
     private AnchorPane paneVk;
@@ -95,13 +103,25 @@ public class ImageController {
     private RadioButton radioDownloadImgFromOther;
 
     @FXML
-    private Label labelPreResultParsing;
+    private Label labelResultParsingImgURFound;
 
     @FXML
-    private Label labelResultParsing;
+    private Label labelResultParsingImgURLNow;
 
     @FXML
-    private Label labelAlert;
+    private Label labelResultParsingImgURLSum;
+
+    @FXML
+    private Label labelParsingImgURLIsRunning;
+
+    @FXML
+    private Label labelParsingImgURLFinished;
+
+    @FXML
+    private Label labelParsingImgURLAlert;
+
+    @FXML
+    private Label labelParsingImgURLReady;
 
     @FXML
     private TitledPane accordionVkGif;
@@ -161,7 +181,7 @@ public class ImageController {
     private Button buttonClearTableField;
 
     @FXML
-    private ImageView imgParsinEndOk;
+    private ProgressBar progressbarImgParsing;
 
     @FXML
     void buttonClearTableField(ActionEvent event) {
@@ -177,14 +197,6 @@ public class ImageController {
     void buttonStartImgParse(ActionEvent event) {
     }
 
-    @FXML
-    void buttonStopParsingImg(ActionEvent event) {
-        //stopParsing = 1;
-
-        //Runnable parsAndDownloadImages = new VKParserImages('0', "", "", stopParsing);
-        //new Thread(parsAndDownloadImages).interrupt();
-        //parsAndDownloadImages.vkParserImages();
-    }
 
     @FXML
     void buttonStopParsingGif(ActionEvent event) {
@@ -276,21 +288,24 @@ public class ImageController {
     }
 
 
+
     @FXML
     void initialize(){
-
         radioParsImgNew.setDisable(true);
         radioParsImgOld.setDisable(true);
-        imgParsinEndOk.setVisible(false);
 
         accordionVk.setExpandedPane(accordionVkImage);
-        makeLabelResultParsingVisible();
+        makeLabelParsingImgURLReadyVisible();
 
 
         buttonStartGifParse.setOnAction(event ->{
         });
 
         buttonStartGifParse.setOnAction(event ->{
+        });
+
+        inputUrlOtherPublicImg.addEventFilter(KeyEvent.ANY, e ->{
+            buttonStartImgParse.setDisable(false);
         });
 
         buttonStartImgParse.setOnAction(event ->{
@@ -299,10 +314,10 @@ public class ImageController {
             offsetSrcImages = 0;
 
             if(!radioDownloadImgFromOwn.isSelected() || !radioDowloadGifFromOwn.isSelected()) {groupDomain = "";}
-            makeLabelResultParsingVisible();
-            labelResultParsing.setText("0");
+            makeLabelProcessParsingVisible();
+            labelResultParsingImgURLNow.setText("0");
+            labelResultParsingImgURFound.setText("0");
             buttonStartImgParse.setDisable(true);
-            imgParsinEndOk.setVisible(false);
 
             Thread t = new Thread(new Runnable() {
                 private volatile boolean running = true;
@@ -322,10 +337,62 @@ public class ImageController {
                 t.setName("ParsCounter");
                 t.setDaemon(true);
                 t.start();
-            //System.out.println(t.getState().toString());
         });
     }
+/* ------------- парсим Id паблика для если человек ввел короткое имя вместо ссылки ------------- -*/
+    public void checkRadiosForStartParsingButton(){
+        if(radioDownloadImgFromOwn.isSelected() || radioDownloadImgFromOther.isSelected()){
+            radioParsImgNew.setDisable(false);
+            radioParsImgOld.setDisable(false);
+        }else{
+            radioParsImgOld.setDisable(true);
+            radioParsImgNew.setDisable(true);
+            radioParsImgNew.setSelected(false);
+            radioParsImgOld.setSelected(false);
+            buttonStartImgParse.setDisable(true);
+        }
 
+        if(radioParsImgOld.isSelected() || radioParsImgNew.isSelected()){
+            buttonStartImgParse.setDisable(false);
+        }else{
+            buttonStartImgParse.setDisable(true);
+        }
+    }
+
+    public static String removeCharAt(String s, int pos) {
+        return s.substring(0, pos) + s.substring(pos + 1);
+    }
+
+    public static String removeWordClubAt(String s) {
+        return s.substring(6);
+    }
+
+    public void makeLabelParsingImgURLAlertVisible(){
+        labelParsingImgURLIsRunning.setVisible(false);
+        labelParsingImgURLFinished.setVisible(false);
+        labelParsingImgURLAlert.setVisible(true);
+    }
+
+    public void makeLabelProcessParsingVisible(){
+        labelParsingImgURLIsRunning.setVisible(true);
+        labelParsingImgURLAlert.setVisible(false);
+        labelParsingImgURLFinished.setVisible(false);
+        labelParsingImgURLReady.setVisible(false);
+    }
+
+    public void makeLabelFinishedParsingVisible(){
+        labelParsingImgURLIsRunning.setVisible(false);
+        labelParsingImgURLAlert.setVisible(false);
+        labelParsingImgURLFinished.setVisible(true);
+        labelParsingImgURLReady.setVisible(false);
+    }
+
+    public void makeLabelParsingImgURLReadyVisible(){
+        labelParsingImgURLIsRunning.setVisible(false);
+        labelParsingImgURLAlert.setVisible(false);
+        labelParsingImgURLFinished.setVisible(false);
+        labelParsingImgURLReady.setVisible(true);
+    }
     public void doParsePublicId() throws MalformedURLException {
         if (radioParsImgNew.isSelected()) {
             rev = 1;
@@ -333,10 +400,10 @@ public class ImageController {
             rev = 0;
         }
         if (radioImgAdult.isSelected()) {
-            typeOfContent = "adult";
+            typeOfContent = "imgAdult";
         }
         if (radioImgFun.isSelected()) {
-            typeOfContent = "fun";
+            typeOfContent = "imgFun";
         }
         if (radioImgAdult.isSelected() && radioDownloadImgFromOwn.isSelected()) {
             groupDomain = Constant.VK_ADULT_GROUP_DOMAIN;
@@ -352,10 +419,8 @@ public class ImageController {
             if (otherGroupDomainURL != "") {
                 String regexp = "vk.com";
                 String regexp2 = "public";
-                //String replace = "";
                 Pattern pattern = Pattern.compile(regexp);
                 Matcher matcher = pattern.matcher(otherGroupDomainURL);
-                //System.out.println(matcher.find());
                 if(matcher.find()) {
                     inputOtherGroupDomainURL = new URL(otherGroupDomainURL);
                     groupDomain = inputOtherGroupDomainURL.getPath();
@@ -398,83 +463,17 @@ public class ImageController {
                 // преобразуем обьект в массив и обращаемся к элементу items, где содержаться ссылки на размеры картинки
                 JsonArray pItem = mainObject.getAsJsonArray("response");
                 groupDomain = "-" + pItem.get(0).getAsJsonObject().get("id") + "";
-
             }
 
         }
 
-    }
-
-
-
-    public void checkRadiosForStartParsingButton(){
-
-        if(radioDownloadImgFromOwn.isSelected() || radioDownloadImgFromOther.isSelected()){
-            radioParsImgNew.setDisable(false);
-            radioParsImgOld.setDisable(false);
-        }else{
-            radioParsImgOld.setDisable(true);
-            radioParsImgNew.setDisable(true);
-            radioParsImgNew.setSelected(false);
-            radioParsImgOld.setSelected(false);
-            buttonStartImgParse.setDisable(true);
-        }
-
-
-        if(radioParsImgOld.isSelected() || radioParsImgNew.isSelected()){
-            buttonStartImgParse.setDisable(false);
-        }else{
-            buttonStartImgParse.setDisable(true);
-        }
-
-    }
-
-    public static String removeCharAt(String s, int pos) {
-        return s.substring(0, pos) + s.substring(pos + 1);
-    }
-
-    public static String removeWordClubAt(String s) {
-        return s.substring(6);
-    }
-
-
-    public void makeLabelResultParsingUnvisible(){
-        labelResultParsing.setVisible(false);
-        labelPreResultParsing.setVisible(false);
-        labelAlert.setVisible(true);
-    }
-
-
-    public void makeLabelResultParsingVisible(){
-        labelResultParsing.setVisible(true);
-        labelPreResultParsing.setVisible(true);
-        labelAlert.setVisible(false);
     }
 
     public void doParseAndSave() throws MalformedURLException {
-        String stringSrcImages = "";
-        String stringSrcImagesAdult = "";
-        String stringSrcImagesFun = "";
+        String stringSrcImages      = "";
         // подключаем метод парсинга id паблика
         doParsePublicId();
-        // если мы уже парсили эту группу то останавлдиваем поток и метод
-        if(checkGroupDomain == groupDomain){
-            makeLabelResultParsingUnvisible();
-            try{
-                //System.out.println("Thread stopped now2!");
-
-                Thread.sleep(100);
-                //System.out.println("Thread stopped now3!");
-
-            }catch (InterruptedException ex){
-                //System.out.println("Thread stopped now4!");
-                Thread.currentThread().interrupt();
-                //System.out.println("Thread stopped now5!");
-            }
-        }
-
-            for (int cicle = 0; cicle <= counter; cicle += 1000) {
-                //counter2 = counter;
+        for (int cicle = 0; cicle <= counter; cicle += 1000) {
                 URIBuilder uriBuilder = new URIBuilder();
                 // создаем и отправляем запрос к ВК апи - указываем какая группа, ключ доступа, отображать ли в ответе размер
                 // сколько записей надо спарсить, откуда парсить(в данном случае из альбома стены группы), версия АПИ ВК
@@ -506,9 +505,16 @@ public class ImageController {
                     JsonParser parser = new JsonParser();
                     // парсим ответ и преобразыем в Джсон обьект с получение главного элемент response
                     JsonObject mainObject = parser.parse(input).getAsJsonObject().getAsJsonObject("response");
-                    // получаем количестов изображений
-                    //JsonArray mainArrayCount = mainObject.getAsJsonArray("count");
+                    // получаем общее количестов изображений в паблике
                     countAllImgInPublic = mainObject.get("count").getAsInt();
+                    // выводим на панель
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            labelResultParsingImgURFound.setText("" + countAllImgInPublic + "");
+                        }
+                    });
+
                     // преобразуем обьект в массив и обращаемся к элементу items, где содержаться ссылки на размеры картинки
                     JsonArray pItem = mainObject.getAsJsonArray("items");
                     // в цикле обращаемся к каждому элементу items выдираем оттуда адрес изображения по фильтру
@@ -516,23 +522,18 @@ public class ImageController {
                     for (int i = 0; i < pItem.size(); i++) {
                         JsonObject pItems = (JsonObject) pItem.getAsJsonArray().get(i);
                         JsonArray pSizes = pItems.getAsJsonArray("sizes");
-                        // int index = Array.asList(pSizes).indexOf("\"w\"");
                         // из каждого sizes фильтруем по типу "x"(604x403) и пишем в массив
                         for (int j = 0; j < pSizes.size(); j++) {
-
                             JsonObject pWeightSizes = (JsonObject) pSizes.getAsJsonArray().get(j);
                             String switchCasePWeightSize = pWeightSizes.get("type").toString();
                             if (switchCasePWeightSize.equals("\"x\"") || switchCasePWeightSize.equals("\"w\"")) {
-                                //System.out.println("literaTypeSize - " + switchCasePWeightSize + " : " +
-                                //         "" + pWeightSizes.get("src").toString());
-                               // stringSrcImages = pWeightSizes.get("src").toString();
                                 stringSrcImages = stringSrcImages + pWeightSizes.get("src").toString() + ";";
                                 counter++;
-                                //counterCount = counter;
                                 Platform.runLater(new Runnable() {
                                     @Override
                                     public void run() {
-                                        labelResultParsing.setText(""+counter+"");
+                                        labelResultParsingImgURLNow.setText(""+counter+"");
+                                        progressbarImgParsing.progressProperty().setValue(counter*1.0/countAllImgInPublic);
                                     }
                                 });
                                 break;
@@ -542,62 +543,40 @@ public class ImageController {
                     // если колво картинок в паблике равно количеству спарсенных
                     // то делаем видимым галочку что все спарсено
                     if(counter == countAllImgInPublic){
-                        imgParsinEndOk.setVisible(true);
-
-                        //System.out.println("Thread stopped now1!");
+                        makeLabelFinishedParsingVisible();
                         try{
-                            //System.out.println("Thread stopped now2!");
-
                             Thread.sleep(100);
-                           //System.out.println("Thread stopped now3!");
-
-                        }catch (InterruptedException ex){
-                            //System.out.println("Thread stopped now4!");
+                          }catch (InterruptedException ex){
                             Thread.currentThread().interrupt();
-                           //System.out.println("Thread stopped now5!");
                         }
-                    }else{
-                        makeLabelResultParsingVisible();
                     }
 
                     // если количество спарсенных картинок равно 1000 то логично предположить что их там больше
                     // а значит добавляем еще один проход на 1000
                     if (counter >= 1000) {
                         offsetSrcImages = offsetSrcImages + 1000;
-                        System.out.println("Images on the Wall - " + counter);
-                        //imageController.changeJLabel(""+counter+"");
-                        //Platform.runLater(() -> imageController.labelResultParsing.setText(String.valueOf(counter)));
                     } else {
-                        System.out.println("Images on the Wall - " + counter);
-                        //imageController.changeJLabel(""+counter+"");
                         counter = 0;
                     }
-                     //System.out.println(stringSrcImages);
                     // записываем в бд в таблицу спарсенные адреса
                     // картинок
 
-                    if (typeOfContent == "adult") {
-                        stringSrcImagesAdult = stringSrcImages;
-                    }
-                    if (typeOfContent == "fun") {
-                        stringSrcImagesFun = stringSrcImages;
-                    }
-
-                    user.setImgFun(stringSrcImagesFun);
-                    user.setImgAdult(stringSrcImagesAdult);
-                    user.setVideoGifFun("");
-                    user.setVideoGifAdult("");
+                    user.setTypeOfContent(typeOfContent);
+                    user.setImgURLs(stringSrcImages);
+                    user.setPublicURL(groupDomain);
                     user.setLogin(Constant.ADMIN_LOGIN);
                     dbHandler.insertNewDataInDB(user);
-                    //System.out.println(stringSrcImages);
                     stringSrcImages = "";
-                    stringSrcImagesAdult = "";
-                    stringSrcImagesFun = "";
                 }
+        }
+        // выводим общую сумму спарсенных изображений из всех групп за сессию
+        // пишем в переменную чтобы вести суммарную статистику спарсенных изображений
+        countAllImgOfParsingSession = countAllImgOfParsingSession + countAllImgInPublic;
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                labelResultParsingImgURLSum.setText("" + countAllImgOfParsingSession + "");
             }
-            // создаем переменную для проверки чтьо бы если группа уже парсилась то мы выкинули предупреждлеие
-            checkGroupDomain = groupDomain;
+        });
     }
-
-
 }
