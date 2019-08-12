@@ -2,7 +2,6 @@ package sample.controllers;
 
 
 import java.awt.*;
-import java.awt.event.InputMethodEvent;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
@@ -12,20 +11,29 @@ import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import com.mysql.cj.xdevapi.Result;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+
+
+import java.net.URL;
+import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.control.TitledPane;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.input.InputMethodEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.input.KeyEvent;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.utils.URIBuilder;
@@ -39,6 +47,7 @@ import javax.swing.*;
 
 import static javafx.scene.paint.Color.GREEN;
 import static sample.Constant.VK_ACCESS_TOKEN;
+import static sample.Constant.VK_USER_ACCESS_TOKEN;
 
 
 public class ImageController {
@@ -56,9 +65,12 @@ public class ImageController {
 
     DatabaseHandler dbHandler = new DatabaseHandler();
     User user = new User();
-    int counter, offsetSrcImages, countAllImgInPublic, countAllImgOfParsingSession = 0;
+    int counter, offsetOfParsing, offsetOfParsingCount, countAllContentInPublic, countAllImgOfParsingSession = 0;
     private int rev;
-    private String groupDomain, typeOfContent;
+    private String groupDomain;
+    public String typeOfContent = "";
+    public String typeOfResourceContent = "";
+    public String whichRadioButton      = "";
 
 
 ///-----------------------------------------------//
@@ -79,13 +91,13 @@ public class ImageController {
     private TitledPane accordionVkImage;
 
     @FXML
-    private Button buttonStartImgParse;
-
-    @FXML
     private TextField inputUrlOtherPublicImg;
 
     @FXML
     private RadioButton radioParsImgOld;
+
+    @FXML
+    private ToggleGroup tgRBDownloadRev;
 
     @FXML
     private RadioButton radioParsImgNew;
@@ -94,10 +106,16 @@ public class ImageController {
     private RadioButton radioImgFun;
 
     @FXML
+    private ToggleGroup tgRBDownloadTheme;
+
+    @FXML
     private RadioButton radioImgAdult;
 
     @FXML
     private RadioButton radioDownloadImgFromOwn;
+
+    @FXML
+    private ToggleGroup tgRBDownloadFromPublic;
 
     @FXML
     private RadioButton radioDownloadImgFromOther;
@@ -118,40 +136,61 @@ public class ImageController {
     private Label labelParsingImgURLFinished;
 
     @FXML
-    private Label labelParsingImgURLAlert;
+    private Label labelParsingImgURLReady;
 
     @FXML
-    private Label labelParsingImgURLReady;
+    private ProgressBar progressbarImgParsing;
+
+    @FXML
+    private Button buttonStartImgParse;
 
     @FXML
     private TitledPane accordionVkGif;
 
     @FXML
-    private Button buttonStartGifParse;
+    private TextField inputUrlOtherPublicVideo;
 
     @FXML
-    private TextField inputUrlOtherPublicGif;
+    private RadioButton radioParsVideoOld;
 
     @FXML
-    private RadioButton radioParsGifOld;
+    private RadioButton radioParsVideoNew;
 
     @FXML
-    private RadioButton radioParsGifNew;
+    private RadioButton radioVideoFun;
 
     @FXML
-    private RadioButton radioGifFun;
+    private RadioButton radioVideoAdult;
 
     @FXML
-    private RadioButton radioGifAdult;
+    private RadioButton radioDownloadVideoFromOwn;
 
     @FXML
-    private RadioButton radioDowloadGifFromOwn;
+    private RadioButton radioDownloadVideoFromOther;
 
     @FXML
-    private RadioButton radioDowloadGifFromOther;
+    private Label labelResultParsingVideoURFound;
 
     @FXML
-    private Button buttonStopParsingGif;
+    private Label labelResultParsingVideoURLNow;
+
+    @FXML
+    private Label labelResultParsingVideoURLSum;
+
+    @FXML
+    private Label labelParsingVideoURLIsRunning;
+
+    @FXML
+    private Label labelParsingVideoURLFinished;
+
+    @FXML
+    private Label labelParsingVideoURLReady;
+
+    @FXML
+    private ProgressBar progressbarVideoParsing;
+
+    @FXML
+    private Button buttonStartVideoParse;
 
     @FXML
     private AnchorPane panePikabu;
@@ -181,110 +220,108 @@ public class ImageController {
     private Button buttonClearTableField;
 
     @FXML
-    private ProgressBar progressbarImgParsing;
-
-    @FXML
     void buttonClearTableField(ActionEvent event) {
 
     }
 
     @FXML
-    void buttonStartGifParse(ActionEvent event) {
-
-    }
-
-    @FXML
     void buttonStartImgParse(ActionEvent event) {
-    }
-
-
-    @FXML
-    void buttonStopParsingGif(ActionEvent event) {
 
     }
 
     @FXML
-    void inputUrlOtherPublicGif(ActionEvent event) {
+    void buttonStartVideoParse(ActionEvent event) {
 
     }
 
     @FXML
-    void inputUrlOtherPublicImg(ActionEvent event) {
+    void inputUrlOtherPublicImg(InputMethodEvent event) {
 
     }
 
     @FXML
-    void radioDowloadGifFromOther(ActionEvent event) {
-        radioDowloadGifFromOwn.setSelected(false);
-        inputUrlOtherPublicGif.setDisable(false);
+    void inputUrlOtherPublicVideo(ActionEvent event) {
+
     }
 
     @FXML
-    void radioDowloadGifFromOwn(ActionEvent event) {
-        radioDowloadGifFromOther.setSelected(false);
-        inputUrlOtherPublicGif.setDisable(false);
+    void radioVideoAdult(ActionEvent event) {
+        whichRadioButton = "video";
+        radioVideoFun.setSelected(false);
+        checkRadiosForStartParsingButton(whichRadioButton);
+    }
+
+    @FXML
+    void radioVideoFun(ActionEvent event) {
+        whichRadioButton = "video";
+        radioVideoAdult.setSelected(false);
+        checkRadiosForStartParsingButton(whichRadioButton);
+    }
+
+    @FXML
+    void radioImgAdult(ActionEvent event) {
+        whichRadioButton = "img";
+        radioImgFun.setSelected(false);
+        checkRadiosForStartParsingButton(whichRadioButton);
+    }
+
+    @FXML
+    void radioImgFun(ActionEvent event) {
+        whichRadioButton = "img";
+        radioImgAdult.setSelected(false);
+        checkRadiosForStartParsingButton(whichRadioButton);
     }
 
     @FXML
     void radioDownloadImgFromOther(ActionEvent event) {
         radioDownloadImgFromOwn.setSelected(false);
         inputUrlOtherPublicImg.setDisable(false);
-        checkRadiosForStartParsingButton();
+        checkRadiosForStartParsingButton(whichRadioButton);
     }
 
     @FXML
     void radioDownloadImgFromOwn(ActionEvent event) {
         inputUrlOtherPublicImg.setDisable(true);
         radioDownloadImgFromOther.setSelected(false);
-        checkRadiosForStartParsingButton();
+        checkRadiosForStartParsingButton(whichRadioButton);
     }
 
     @FXML
-    void radioGifAdult(ActionEvent event) {
-        radioGifFun.setSelected(false);
-        inputUrlOtherPublicGif.setDisable(false);
+    void radioDownloadVideoFromOther(ActionEvent event) {
+        radioDownloadVideoFromOwn.setSelected(false);
+        inputUrlOtherPublicVideo.setDisable(false);
+        checkRadiosForStartParsingButton(whichRadioButton);
     }
 
     @FXML
-    void radioGifFun(ActionEvent event) {
-        radioGifAdult.setSelected(false);
-        inputUrlOtherPublicGif.setDisable(false);
-    }
-
-    @FXML
-    void radioImgAdult(ActionEvent event) {
-        radioImgFun.setSelected(false);
-        checkRadiosForStartParsingButton();
-    }
-
-    @FXML
-    void radioImgFun(ActionEvent event) {
-        radioImgAdult.setSelected(false);
-        checkRadiosForStartParsingButton();
-    }
-
-    @FXML
-    void radioParsGifNew(ActionEvent event) {
-        radioParsGifOld.setSelected(false);
-        buttonStartGifParse.setDisable(false);
-    }
-
-    @FXML
-    void radioParsGifOld(ActionEvent event) {
-        radioParsGifNew.setSelected(false);
-        buttonStartGifParse.setDisable(false);
+    void radioDownloadVideoFromOwn(ActionEvent event) {
+        inputUrlOtherPublicVideo.setDisable(true);
+        radioDownloadVideoFromOther.setSelected(false);
+        checkRadiosForStartParsingButton(whichRadioButton);
     }
 
     @FXML
     void radioParsImgNew(ActionEvent event) {
         radioParsImgOld.setSelected(false);
-        checkRadiosForStartParsingButton();
+        checkRadiosForStartParsingButton(whichRadioButton);
     }
 
     @FXML
     void radioParsImgOld(ActionEvent event) {
         radioParsImgNew.setSelected(false);
-        checkRadiosForStartParsingButton();
+        checkRadiosForStartParsingButton(whichRadioButton);
+    }
+
+    @FXML
+    void radioParsVideoNew(ActionEvent event) {
+        radioParsVideoOld.setSelected(false);
+        checkRadiosForStartParsingButton(whichRadioButton);
+    }
+
+    @FXML
+    void radioParsVideoOld(ActionEvent event) {
+        radioParsVideoNew.setSelected(false);
+        checkRadiosForStartParsingButton(whichRadioButton);
     }
 
 
@@ -293,38 +330,68 @@ public class ImageController {
     void initialize(){
         radioParsImgNew.setDisable(true);
         radioParsImgOld.setDisable(true);
+        radioParsVideoNew.setDisable(true);
+        radioParsVideoOld.setDisable(true);
+
+        labelParsingImgURLIsRunning.setVisible(false);
+        labelParsingImgURLFinished.setVisible(false);
+        labelParsingImgURLReady.setVisible(true);
+
+        labelParsingVideoURLFinished.setVisible(false);
+        labelParsingVideoURLIsRunning.setVisible(false);
+        labelParsingVideoURLReady.setVisible(true);
 
         accordionVk.setExpandedPane(accordionVkImage);
         makeLabelParsingImgURLReadyVisible();
 
 
-        buttonStartGifParse.setOnAction(event ->{
-        });
-
-        buttonStartGifParse.setOnAction(event ->{
-        });
-
+        // если что то меняют в поле "чужой паблик" делаем кнопку запуска парсера активной
         inputUrlOtherPublicImg.addEventFilter(KeyEvent.ANY, e ->{
             buttonStartImgParse.setDisable(false);
         });
+        inputUrlOtherPublicVideo.addEventFilter(KeyEvent.ANY, e ->{
+            buttonStartImgParse.setDisable(false);
+        });
 
-        buttonStartImgParse.setOnAction(event ->{
-
+        // кнопка запуска прсера видео
+        buttonStartVideoParse.setOnAction(event ->{
+            typeOfResourceContent = "video";
             counter         = 0;
-            offsetSrcImages = 0;
+            offsetOfParsing = 0;
+            makeParseThread(typeOfResourceContent,"VKVideoParser");
+        });
 
-            if(!radioDownloadImgFromOwn.isSelected() || !radioDowloadGifFromOwn.isSelected()) {groupDomain = "";}
-            makeLabelProcessParsingVisible();
+        // КНОПКА ЗАПУСКА ПАРСЕРА КАРТИНОК
+        buttonStartImgParse.setOnAction(event ->{
+            typeOfResourceContent = "img";
+            counter         = 0;
+            offsetOfParsing = 0;
+            makeParseThread(typeOfResourceContent,"VKImageParser");
+        });
+    }
+    // создание потоака в отдельный метод
+    public void makeParseThread(String typeOfResourceContent, String nameOfThread){
+        if(typeOfResourceContent == "video") {
+            if (!radioDownloadVideoFromOwn.isSelected()) {
+                groupDomain = "";
+            }
+            labelResultParsingVideoURLNow.setText("0");
+            labelResultParsingVideoURFound.setText("0");
+            buttonStartVideoParse.setDisable(true);
+        }else{
+            if(!radioDownloadImgFromOwn.isSelected()) {groupDomain = "";}
             labelResultParsingImgURLNow.setText("0");
             labelResultParsingImgURFound.setText("0");
             buttonStartImgParse.setDisable(true);
-
-            Thread t = new Thread(new Runnable() {
+        }
+        makeLabelProcessParsingVisible();
+        Thread t = new Thread(new Runnable() {
                 private volatile boolean running = true;
 
                 public void stop() {
                     running = false;
                 }
+
                 @Override
                 public void run() {
                     try {
@@ -334,28 +401,45 @@ public class ImageController {
                     }
                 }
             });
-                t.setName("ParsCounter");
-                t.setDaemon(true);
-                t.start();
-        });
+            t.setName("" + nameOfThread + "");
+            t.setDaemon(true);
+            t.start();
     }
 /* ------------- парсим Id паблика для если человек ввел короткое имя вместо ссылки ------------- -*/
-    public void checkRadiosForStartParsingButton(){
-        if(radioDownloadImgFromOwn.isSelected() || radioDownloadImgFromOther.isSelected()){
-            radioParsImgNew.setDisable(false);
-            radioParsImgOld.setDisable(false);
-        }else{
-            radioParsImgOld.setDisable(true);
-            radioParsImgNew.setDisable(true);
-            radioParsImgNew.setSelected(false);
-            radioParsImgOld.setSelected(false);
-            buttonStartImgParse.setDisable(true);
-        }
+    public void checkRadiosForStartParsingButton(String whichRadioButton){
+        if(whichRadioButton == "img") {
+            if (radioDownloadImgFromOwn.isSelected() || radioDownloadImgFromOther.isSelected()) {
+                radioParsImgNew.setDisable(false);
+                radioParsImgOld.setDisable(false);
+            } else {
+                radioParsImgOld.setDisable(true);
+                radioParsImgNew.setDisable(true);
+                radioParsImgNew.setSelected(false);
+                radioParsImgOld.setSelected(false);
+                buttonStartImgParse.setDisable(true);
+            }
 
-        if(radioParsImgOld.isSelected() || radioParsImgNew.isSelected()){
-            buttonStartImgParse.setDisable(false);
+            if (radioParsImgOld.isSelected() || radioParsImgNew.isSelected()) {
+                buttonStartImgParse.setDisable(false);
+            } else {
+                buttonStartImgParse.setDisable(true);
+            }
         }else{
-            buttonStartImgParse.setDisable(true);
+            if(radioDownloadVideoFromOwn.isSelected() || radioDownloadVideoFromOther.isSelected()){
+                radioParsVideoNew.setDisable(false);
+                radioParsVideoOld.setDisable(false);
+            }else{
+                radioParsVideoOld.setDisable(true);
+                radioParsVideoNew.setDisable(true);
+                radioParsVideoNew.setSelected(false);
+                radioParsVideoOld.setSelected(false);
+                buttonStartVideoParse.setDisable(true);
+            }
+            if(radioParsVideoOld.isSelected() || radioParsVideoNew.isSelected()){
+                buttonStartVideoParse.setDisable(false);
+            }else{
+                buttonStartVideoParse.setDisable(true);
+            }
         }
     }
 
@@ -367,37 +451,54 @@ public class ImageController {
         return s.substring(6);
     }
 
-    public void makeLabelParsingImgURLAlertVisible(){
-        labelParsingImgURLIsRunning.setVisible(false);
-        labelParsingImgURLFinished.setVisible(false);
-        labelParsingImgURLAlert.setVisible(true);
-    }
+
 
     public void makeLabelProcessParsingVisible(){
-        labelParsingImgURLIsRunning.setVisible(true);
-        labelParsingImgURLAlert.setVisible(false);
-        labelParsingImgURLFinished.setVisible(false);
-        labelParsingImgURLReady.setVisible(false);
+        if(typeOfResourceContent == "img") {
+            labelParsingImgURLIsRunning.setVisible(true);
+            labelParsingImgURLFinished.setVisible(false);
+            labelParsingImgURLReady.setVisible(false);
+        }else {
+            labelParsingVideoURLIsRunning.setVisible(true);
+            labelParsingVideoURLFinished.setVisible(false);
+            labelParsingVideoURLReady.setVisible(false);
+        }
     }
 
     public void makeLabelFinishedParsingVisible(){
-        labelParsingImgURLIsRunning.setVisible(false);
-        labelParsingImgURLAlert.setVisible(false);
-        labelParsingImgURLFinished.setVisible(true);
-        labelParsingImgURLReady.setVisible(false);
+        if(typeOfResourceContent == "img") {
+            labelParsingImgURLIsRunning.setVisible(false);
+            labelParsingImgURLFinished.setVisible(true);
+            labelParsingImgURLReady.setVisible(false);
+        }else{
+            labelParsingVideoURLIsRunning.setVisible(false);
+            labelParsingVideoURLFinished.setVisible(true);
+            labelParsingVideoURLReady.setVisible(false);
+        }
     }
 
     public void makeLabelParsingImgURLReadyVisible(){
-        labelParsingImgURLIsRunning.setVisible(false);
-        labelParsingImgURLAlert.setVisible(false);
-        labelParsingImgURLFinished.setVisible(false);
-        labelParsingImgURLReady.setVisible(true);
+        if(typeOfResourceContent == "img") {
+            labelParsingImgURLIsRunning.setVisible(false);
+            labelParsingImgURLFinished.setVisible(false);
+            labelParsingImgURLReady.setVisible(true);
+        }else{
+            labelParsingVideoURLIsRunning.setVisible(false);
+            labelParsingVideoURLFinished.setVisible(false);
+            labelParsingVideoURLReady.setVisible(true);
+        }
     }
     public void doParsePublicId() throws MalformedURLException {
-        if (radioParsImgNew.isSelected()) {
+        if (radioParsImgNew.isSelected() || radioParsVideoNew.isSelected()) {
             rev = 1;
         } else {
             rev = 0;
+        }
+        if (radioVideoAdult.isSelected()) {
+            typeOfContent = "videoAdult";
+        }
+        if (radioVideoFun.isSelected()) {
+            typeOfContent = "videoFun";
         }
         if (radioImgAdult.isSelected()) {
             typeOfContent = "imgAdult";
@@ -405,17 +506,21 @@ public class ImageController {
         if (radioImgFun.isSelected()) {
             typeOfContent = "imgFun";
         }
-        if (radioImgAdult.isSelected() && radioDownloadImgFromOwn.isSelected()) {
+        if (radioImgAdult.isSelected() && radioDownloadImgFromOwn.isSelected() ||
+            radioVideoAdult.isSelected() && radioDownloadVideoFromOwn.isSelected()) {
             groupDomain = Constant.VK_ADULT_GROUP_DOMAIN;
         }
 
-        if (radioImgFun.isSelected() && radioDownloadImgFromOwn.isSelected()) {
+        if (radioImgFun.isSelected() && radioDownloadImgFromOwn.isSelected() ||
+            radioVideoFun.isSelected() && radioDownloadVideoFromOwn.isSelected()) {
             groupDomain = Constant.VK_FUN_GROUP_DOMAIN;
         }
 
-        if (radioDownloadImgFromOther.isSelected()) {
+        if (radioDownloadImgFromOther.isSelected() ||
+            radioDownloadVideoFromOther.isSelected()) {
             URL inputOtherGroupDomainURL = null;
-            String otherGroupDomainURL = inputUrlOtherPublicImg.getText().trim();
+            String otherGroupDomainURL = ""+inputUrlOtherPublicImg.getText().trim()+""
+                                           +inputUrlOtherPublicVideo.getText().trim()+"";
             if (otherGroupDomainURL != "") {
                 String regexp = "vk.com";
                 String regexp2 = "public";
@@ -470,22 +575,79 @@ public class ImageController {
     }
 
     public void doParseAndSave() throws MalformedURLException {
-        String stringSrcImages      = "";
+        String stringSrcImages  = "";
+        String stringSrcVideos  = "";
+        String typeOfMethod     = "";
+        String paramRev         = "";
+        String paramRevValue    = "";
+        String paramOfPhoto     = "";
+        String paramOfPhotoAlbum     = "";
+        String valueParamOfPhoto     = "";
+        String valueParamOfPhotoAlbum= "";
+        String apiVersion            = "";
+        String jsonArrayItem        = "";
+        String paramAccessToken     = "";
+        String paramAccessTokenValue    = "";
+        String jsonObjectOfpWeightSizes   = "";
+        String valuParamExtended   = "";
+        String[] foundNeedlePWeightSizes;
+        int countOfTypes;
         // подключаем метод парсинга id паблика
         doParsePublicId();
         for (int cicle = 0; cicle <= counter; cicle += 1000) {
                 URIBuilder uriBuilder = new URIBuilder();
+               // если запрос по кртинка то подставляем схему для картинки, если по видео - видео
+            if(typeOfContent == "imgAdult" || typeOfContent == "imgFun"){
+                typeOfMethod = "photos.get";
+                countOfTypes = 1000;
+                paramOfPhoto = "photo_sizes";
+                valueParamOfPhoto = "1";
+                paramOfPhotoAlbum = "album_id";
+                valueParamOfPhotoAlbum  = "wall";
+                paramRev                = "rev";
+                paramRevValue           = "" + rev + "";
+                offsetOfParsingCount    = 1000;
+                apiVersion              = "5.73";
+                jsonArrayItem           ="sizes";
+                paramAccessToken        = "access_token";
+                paramAccessTokenValue   = VK_ACCESS_TOKEN;
+                jsonObjectOfpWeightSizes= "type";
+                foundNeedlePWeightSizes = new String[]{"x", "w"};
+                valuParamExtended = "0";
+
+            }else{
+                typeOfMethod = "video.get";
+                countOfTypes = 200;
+                paramOfPhoto = "";
+                valueParamOfPhoto = "";
+                paramOfPhotoAlbum = "";
+                valueParamOfPhotoAlbum = "";
+                paramRev         = "";
+                paramRevValue    = "";
+                offsetOfParsingCount  = 200;
+                apiVersion       = "5.101";
+                jsonArrayItem    = "files";
+                paramAccessToken        = "access_token";
+                paramAccessTokenValue   = VK_USER_ACCESS_TOKEN;
+                jsonObjectOfpWeightSizes= "mp4_360";
+                foundNeedlePWeightSizes = new String[]{"mp4_720", "mp4_360"};
+                valuParamExtended = "1";
+
+            }
                 // создаем и отправляем запрос к ВК апи - указываем какая группа, ключ доступа, отображать ли в ответе размер
                 // сколько записей надо спарсить, откуда парсить(в данном случае из альбома стены группы), версия АПИ ВК
-                uriBuilder.setScheme("https").setHost("api.vk.com").setPath("/method/photos.get")
+                uriBuilder.setScheme("https")
+                        .setHost("api.vk.com")
+                        .setPath("/method/" + typeOfMethod + "")
                         .setParameter("owner_id", "" + groupDomain + "")
-                        .setParameter("access_token", VK_ACCESS_TOKEN)
-                        .setParameter("photo_sizes", "1")
-                        .setParameter("count", "1000")
-                        .setParameter("album_id", "wall")
-                        .setParameter("rev", "" + rev + "")
-                        .setParameter("offset", "" + offsetSrcImages + "")
-                        .setParameter("v", "5.73");
+                        .setParameter("" + paramAccessToken + "", "" + paramAccessTokenValue + "")
+                        .setParameter("" + paramOfPhoto + "", "" + valueParamOfPhoto + "")
+                        .setParameter("count", "" + countOfTypes + "")
+                        .setParameter("" + paramOfPhotoAlbum + "", "" + valueParamOfPhotoAlbum + "")
+                        .setParameter("" + paramRev + "", "" + paramRevValue + "")
+                        .setParameter("offset", "" + offsetOfParsing + "")
+                        .setParameter("extended", "" + valuParamExtended + "")
+                        .setParameter("v", "" + apiVersion + "");
                 // создаем соединение
                 HttpResponse response = HttpConnectionAgent.connectResponse(uriBuilder);
                 // считываем номер ответа соединения
@@ -506,12 +668,16 @@ public class ImageController {
                     // парсим ответ и преобразыем в Джсон обьект с получение главного элемент response
                     JsonObject mainObject = parser.parse(input).getAsJsonObject().getAsJsonObject("response");
                     // получаем общее количестов изображений в паблике
-                    countAllImgInPublic = mainObject.get("count").getAsInt();
+                    countAllContentInPublic = mainObject.get("count").getAsInt();
                     // выводим на панель
                     Platform.runLater(new Runnable() {
                         @Override
                         public void run() {
-                            labelResultParsingImgURFound.setText("" + countAllImgInPublic + "");
+                            if(typeOfResourceContent == "img"){
+                                labelResultParsingImgURFound.setText("" + countAllContentInPublic + "");
+                            }else{
+                                labelResultParsingVideoURFound.setText("" + countAllContentInPublic + "");
+                            }
                         }
                     });
 
@@ -521,19 +687,30 @@ public class ImageController {
                     // - нам нужен максимальный "w"
                     for (int i = 0; i < pItem.size(); i++) {
                         JsonObject pItems = (JsonObject) pItem.getAsJsonArray().get(i);
-                        JsonArray pSizes = pItems.getAsJsonArray("sizes");
+                        //JsonElement stringFilesFromJsonObject = pItems.getAsJsonArray("files").get(0);
+                        //String stringFilesFromJsonObject = pItems.getAsJsonObject("files").toString();
+                        //System.out.println(stringFilesFromJsonObject.toString());
+                        //JsonArray jsonArraypItems = (JsonArray) pItems.getAsJsonObject("files");
+                        System.out.println(jsonArrayItem + " - " );
+                        JsonObject pSizes2 =  pItems.getAsJsonObject("" + jsonArrayItem + "");
+                        JsonPrimitive arrayPSizes2 = pSizes2.getAsJsonPrimitive("mp4_360");
+                        System.out.println(arrayPSizes2.toString());
+
+                        JsonArray pSizes =  pItems.getAsJsonArray("" + jsonArrayItem + "");
+
                         // из каждого sizes фильтруем по типу "x"(604x403) и пишем в массив
                         for (int j = 0; j < pSizes.size(); j++) {
                             JsonObject pWeightSizes = (JsonObject) pSizes.getAsJsonArray().get(j);
-                            String switchCasePWeightSize = pWeightSizes.get("type").toString();
-                            if (switchCasePWeightSize.equals("\"x\"") || switchCasePWeightSize.equals("\"w\"")) {
+
+                            String needlePWeightSize = pWeightSizes.get("" + jsonObjectOfpWeightSizes + "").toString();
+                            if (needlePWeightSize.equals("\"" + foundNeedlePWeightSizes[0] + "\"") || needlePWeightSize.equals("\"" + foundNeedlePWeightSizes[1] + "\"")) {
                                 stringSrcImages = stringSrcImages + pWeightSizes.get("src").toString() + ";";
                                 counter++;
                                 Platform.runLater(new Runnable() {
                                     @Override
                                     public void run() {
                                         labelResultParsingImgURLNow.setText(""+counter+"");
-                                        progressbarImgParsing.progressProperty().setValue(counter*1.0/countAllImgInPublic);
+                                        progressbarImgParsing.progressProperty().setValue(counter*1.0/countAllContentInPublic);
                                     }
                                 });
                                 break;
@@ -542,7 +719,7 @@ public class ImageController {
                     }
                     // если колво картинок в паблике равно количеству спарсенных
                     // то делаем видимым галочку что все спарсено
-                    if(counter == countAllImgInPublic){
+                    if(counter == countAllContentInPublic){
                         makeLabelFinishedParsingVisible();
                         try{
                             Thread.sleep(100);
@@ -551,10 +728,10 @@ public class ImageController {
                         }
                     }
 
-                    // если количество спарсенных картинок равно 1000 то логично предположить что их там больше
-                    // а значит добавляем еще один проход на 1000
-                    if (counter >= 1000) {
-                        offsetSrcImages = offsetSrcImages + 1000;
+                    // если количество спарсенных картинок равно 1000 или 200 видео то логично предположить что их там больше
+                    // а значит добавляем еще один проход на 1000 или 200 в зависимосит от того что парсим
+                    if (counter >= offsetOfParsingCount) {
+                        offsetOfParsing = offsetOfParsing + offsetOfParsingCount;
                     } else {
                         counter = 0;
                     }
@@ -571,7 +748,7 @@ public class ImageController {
         }
         // выводим общую сумму спарсенных изображений из всех групп за сессию
         // пишем в переменную чтобы вести суммарную статистику спарсенных изображений
-        countAllImgOfParsingSession = countAllImgOfParsingSession + countAllImgInPublic;
+        countAllImgOfParsingSession = countAllImgOfParsingSession + countAllContentInPublic;
         Platform.runLater(new Runnable() {
             @Override
             public void run() {

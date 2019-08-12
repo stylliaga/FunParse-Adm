@@ -1,35 +1,38 @@
 package sample;
 
 public class Constant {
-    public static final String ADMIN_LOGIN          = "stylliaga";
-    //public static final String ADMIN_TABLE          = "data_admin";
-    public static final String DATA_ADMIN          = "data_admin";
-    public static final String DATA_USERS          = "data_admin";
-    public static final String USER_TABLE           = "users";
-    public static final String USERS_ID             = "idusers";
-    public static final String USERS_LOGIN          = "login";
-    public static final String USERS_PASSWORD       = "password";
-    public static final String USERS_EMAIL          = "email";
-    public static final String USERS_CITY           = "city";
-    public static final String USERS_GENDER         = "gender";
-    public static final String USERS_SORT_BY        = "sortBy";
-    public static final String USERS_SAVE_ON_COMP   = "saveOnComp";
-    public static final String USERS_SAVE_FOLDER    = "saveFolder";
-    public static final String USERS_ONLY18         = "only18";
-    public static final String USERS_LANGUAGE       = "language";
-    public static final String USERS_IMGFUN         = "imgFun";
-    public static final String USERS_IMGADULT       = "imgAdult";
-    public static final String USERS_VIDEOGIFFUN    = "videoGifFun";
-    public static final String USERS_VIDEOGIFADULT  = "videoGifAdult";
-    public static final String USERS_PUBLICURL      = "publicURL";
-    public static final String USERS_URL_PARSE      = "urlSiteToParse";
+    public static final String ADMIN_LOGIN          = "----------------";
+    //public static final String ADMIN_TABLE          = "----------------";
+    public static final String DATA_ADMIN          = "----------------";
+    public static final String DATA_USERS          = "----------------";
+    public static final String USER_TABLE           = "----------------";
+    public static final String USERS_ID             = "----------------";
+    public static final String USERS_LOGIN          = "----------------";
+    public static final String USERS_PASSWORD       = "----------------";
+    public static final String USERS_EMAIL          = "----------------";
+    public static final String USERS_CITY           = "----------------";
+    public static final String USERS_GENDER         = "----------------";
+    public static final String USERS_SORT_BY        = "----------------";
+    public static final String USERS_SAVE_ON_COMP   = "----------------";
+    public static final String USERS_SAVE_FOLDER    = "----------------";
+    public static final String USERS_ONLY18         = "----------------";
+    public static final String USERS_LANGUAGE       = "----------------";
+    public static final String USERS_IMGFUN         = "----------------";
+    public static final String USERS_IMGADULT       = "----------------";
+    public static final String USERS_VIDEOGIFFUN    = "----------------";
+    public static final String USERS_VIDEOGIFADULT  = "----------------";
+    public static final String USERS_PUBLICURL      = "----------------";
+    public static final String USERS_URL_PARSE      = "----------------";
 
-    public static final String USERS_RESOURCE_OF_URLS  = "URLs";
-    public static final String USERS_TYPE_OF_URLS      = "typeOfContent";
+    public static final String USERS_RESOURCE_OF_URLS  = "----------------";
+    public static final String USERS_TYPE_OF_URLS      = "----------------";
 
-    public static final String VK_ADULT_GROUP_DOMAIN    = "-105702650";
-    public static final String VK_FUN_GROUP_DOMAIN      = "-76582686";
-    public static final String VK_ACCESS_TOKEN      = "157904bd157904bd157904bdb21512cfe011579157904bd484a2f82dafa87aafea496cf";
+    public static final String VK_ADULT_GROUP_DOMAIN    = "-----------------;
+    public static final String VK_FUN_GROUP_DOMAIN      = "-----------------";
+    public static final String VK_ACCESS_TOKEN      = "----------------";
+    public static final String VK_USER_ACCESS_TOKEN      = "----------------";
+
+
 }
 /*
 https://vk.com/public26456494
@@ -38,6 +41,38 @@ https://vk.com/bonafide
 
 https://vk.com/public180255961
 https://vk.com/public172329321
+
+
+public static final String ADMIN_LOGIN          = "----------------";
+    //public static final String ADMIN_TABLE          = "----------------";
+    public static final String DATA_ADMIN          = "----------------";
+    public static final String DATA_USERS          = "----------------";
+    public static final String USER_TABLE           = "----------------";
+    public static final String USERS_ID             = "----------------";
+    public static final String USERS_LOGIN          = "----------------";
+    public static final String USERS_PASSWORD       = "----------------";
+    public static final String USERS_EMAIL          = "----------------";
+    public static final String USERS_CITY           = "----------------";
+    public static final String USERS_GENDER         = "----------------";
+    public static final String USERS_SORT_BY        = "----------------";
+    public static final String USERS_SAVE_ON_COMP   = "----------------";
+    public static final String USERS_SAVE_FOLDER    = "----------------";
+    public static final String USERS_ONLY18         = "----------------";
+    public static final String USERS_LANGUAGE       = "----------------";
+    public static final String USERS_IMGFUN         = "----------------";
+    public static final String USERS_IMGADULT       = "----------------";
+    public static final String USERS_VIDEOGIFFUN    = "----------------";
+    public static final String USERS_VIDEOGIFADULT  = "----------------";
+    public static final String USERS_PUBLICURL      = "----------------";
+    public static final String USERS_URL_PARSE      = "----------------";
+
+    public static final String USERS_RESOURCE_OF_URLS  = "----------------";
+    public static final String USERS_TYPE_OF_URLS      = "----------------";
+
+    public static final String VK_ADULT_GROUP_DOMAIN    = "-----------------;
+    public static final String VK_FUN_GROUP_DOMAIN      = "-----------------";
+    public static final String VK_ACCESS_TOKEN      = "----------------";
+    public static final String VK_USER_ACCESS_TOKEN      = "----------------";
 
 
  */

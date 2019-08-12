@@ -153,12 +153,4 @@ public class DatabaseHandler extends Config {
         }
         return resSet;
     }
-    public String insertRequestRow(String nameOfTableField, String gettersOfRequest){
-        String requestRow = "";
-        requestRow = "(" + nameOfTableField + ") VALUES ('" + gettersOfRequest + "')";
-
-        return requestRow;
-    }
-
-
 }
